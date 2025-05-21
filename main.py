@@ -6,7 +6,9 @@ class Uczeń:
         self.imie = imie
         self.nazwisko = nazwisko
         if len(pesel) == 11 and pesel.isdigit():
-            self.pesel=pesel
+            self._pesel=pesel
+        else:
+            raise ValueError("Niepoprawny pesel")
         self.nazwa_grupy = nazwa_grupy
 
     @property
@@ -54,6 +56,21 @@ class Uczeń:
         średnia = średnia/len(self.lista_ocen)
         return średnia
 
+    @staticmethod
+    def dodaj_ucznia(entry_fields):
+        try:
+            imie = entry_fields[0].get()
+            nazwisko = entry_fields[1].get()
+            pesel = entry_fields[2].get()
+            grupa = entry_fields[3].get()
+            nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
+            Uczeń.lista_uczniów.append(nowy_uczen)
+            print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
+            for i in Uczeń.lista_uczniów:
+                print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
     #def czy_zagrożony(self):
 
 
@@ -184,6 +201,11 @@ def wczytywanie_z_pliku(nazwa:str):
     except FileNotFoundError:
         print(f"Plik '{nazwa}' nie istnieje.")
 
+def wypisywanie_błędów(treść):
+    if error_box:
+        error_box.delete("1.0", tk.END)
+        error_box.insert(tk.END, treść)
+
 wczytywanie_z_pliku("Uczniowie.txt")
 wczytywanie_z_pliku("Grupy.txt")
 wczytywanie_z_pliku("Oceny.txt")
@@ -198,7 +220,10 @@ okno_aplikacji.geometry("600x400")
 okno_aplikacji.title("Dziennik nauczyciela")
 
 entries_frame = tk.Frame(okno_aplikacji)
-entries_frame.grid(row=1, column=0, padx=10, pady=20)
+entries_frame.grid(row=1, column=0)
+global error_box
+error_box = tk.Text(okno_aplikacji, height=5, fg="red", wrap="word")
+error_box.grid(row=2, column=0, columnspan=5, sticky="we", padx=10, pady=10)
 
 ocenaLubObecnosc=[]
 def update_ocenaLubObecnosc(sel):
@@ -225,9 +250,29 @@ def update_entries(selection):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
+            save_button = tk.Button(entries_frame, text="Zapisz ucznia",command=lambda: Uczeń.dodaj_ucznia(entry_fields))
+            save_button.grid(row=2 + len(labels), column=2, pady=10)
+            listbox = tk.Listbox(entries_frame)
+            for i in Uczeń.lista_uczniów:
+                listbox.insert(tk.END, i.imie +" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
+            listbox.grid(row=2,column=3, rowspan=5,padx=5,pady=5,sticky="nwse")
             return
+        case "Usuwanie ucznia":
+            labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=7, pady=10, sticky="e")
+                entry = tk.Entry(entries_frame, width=15)
+                entry.grid(row=2 + i, column=2, padx=7, pady=10)
+                entry_fields.append(entry)
+            return
+        #edytowanie ucznia
+
         case "Sprawdzanie obecności":
+            labels = ["Grupa", "Uczeń","Stan obecności"]
             for i in range(3):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=7, pady=10, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
@@ -293,7 +338,10 @@ def show_values():
 
 selected_option = tk.StringVar(okno_aplikacji)
 selected_option.set("Wybierz opcję")
-options = ["Dodawanie ucznia", "Sprawdzanie obecności", "Wystawianie oceny",
+options = ["Dodawanie ucznia",
+           "Usuwanie ucznia",
+           "Sprawdzanie obecności",
+           "Wystawianie oceny",
            "Edycja oceny/obecności danego dnia",
            "Wyświetlenie oceny/obecności danego ucznia",
            "Wystawianie zagrożenia",
@@ -301,9 +349,7 @@ options = ["Dodawanie ucznia", "Sprawdzanie obecności", "Wystawianie oceny",
            "Wygeneruj raport z ocen i obecności uczniów",
            "Generowanie statystyk"]
 dropdown = tk.OptionMenu(okno_aplikacji, selected_option, *options, command=update_entries)
-dropdown.grid(row=0, column=0, pady=10)
+dropdown.grid(row=0, column=0, columnspan=10,sticky="new",padx=10,pady=10)
 
-show_button = tk.Button(okno_aplikacji, text="Pokaż dane", command=show_values)
-show_button.grid(row=2, column=4, pady=10)
 
 okno_aplikacji.mainloop()

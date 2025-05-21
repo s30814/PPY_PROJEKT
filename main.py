@@ -5,6 +5,9 @@ class Uczeń:
     def __init__(self, imie:str, nazwisko:str, pesel:str, nazwa_grupy:str):
         self.imie = imie
         self.nazwisko = nazwisko
+        for i in Uczeń.lista_uczniów:
+            if i.pesel == pesel:
+                raise ValueError("Osoba o takim peselu już jest na liście")
         if len(pesel) == 11 and pesel.isdigit():
             self._pesel=pesel
         else:
@@ -71,6 +74,7 @@ class Uczeń:
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
+
     #def czy_zagrożony(self):
 
 
@@ -216,10 +220,15 @@ okno_aplikacji.geometry("600x400")
 okno_aplikacji.title("Dziennik nauczyciela")
 
 entries_frame = tk.Frame(okno_aplikacji)
-entries_frame.grid(row=1, column=0)
+entries_frame.grid(row=1, column=0, sticky="nsew")
+
+okno_aplikacji.grid_columnconfigure(0, weight=1)
+okno_aplikacji.grid_rowconfigure(1, weight=1)
+
 global error_box
 error_box = tk.Text(okno_aplikacji, height=5, fg="red", wrap="word")
 error_box.grid(row=2, column=0, columnspan=5, sticky="we", padx=10, pady=10)
+
 
 ocenaLubObecnosc=[]
 def update_ocenaLubObecnosc(sel):
@@ -229,6 +238,7 @@ def update_ocenaLubObecnosc(sel):
 
 opcjeOcLubOb = tk.StringVar(okno_aplikacji)
 opcjeOcLubOb.set("Wybierz opcję")
+
 options2 = ["Ocena", "Obecnosc"]
 
 entry_fields = []
@@ -242,16 +252,24 @@ def update_entries(selection):
             labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]
             for i in range(len(labels)):
                 label = tk.Label(entries_frame, text=labels[i])
-                label.grid(row=2+i, column=1, padx=7, pady=10,sticky="e")
+                label.grid(row=2 + i, column=1, padx=7, pady=10, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
+                entry.grid(row=2 + i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             save_button = tk.Button(entries_frame, text="Zapisz ucznia",command=lambda: Uczeń.dodaj_ucznia(entry_fields))
             save_button.grid(row=2 + len(labels), column=2, pady=10)
+
+            entries_frame.grid_columnconfigure(0,weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
             listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista uczniów")
+            label.grid(row=2, column=3, padx=5, pady=5, sticky="ew")
             for i in Uczeń.lista_uczniów:
-                listbox.insert(tk.END, i.imie +" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
-            listbox.grid(row=2,column=3, rowspan=5,padx=5,pady=5,sticky="nwse")
+                listbox.insert(tk.END, i.imie + '   ' + i.nazwisko + "   " + i.pesel + "   " + i.nazwa_grupy)
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=5, sticky="nsew")
             return
         case "Usuwanie ucznia":
             labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]

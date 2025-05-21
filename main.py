@@ -1,4 +1,6 @@
 import tkinter as tk
+from itertools import count
+
 
 class Uczeń:
     lista_uczniów = []
@@ -71,6 +73,29 @@ class Uczeń:
             print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
             for i in Uczeń.lista_uczniów:
                 print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
+                wypisywanie_błędów("")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+
+    @staticmethod
+    def usuń_ucznia(entry_fields):
+        try:
+            imie = entry_fields[0].get()
+            nazwisko = entry_fields[1].get()
+            pesel = entry_fields[2].get()
+            grupa = entry_fields[3].get()
+            count=0
+            for i in Uczeń.lista_uczniów:
+                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa and i.pesel == pesel:
+                    Uczeń.lista_uczniów.remove(i)
+                    count += 1
+            if count == 0:
+                raise ValueError("Nieistnieje taka osoba")
+            print(f"Usunięto ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
+            for i in Uczeń.lista_uczniów:
+                print(i.imie + " " + i.nazwisko + " " + i.pesel + " " + i.nazwa_grupy)
+                wypisywanie_błędów("")
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -279,6 +304,20 @@ def update_entries(selection):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2 + i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
+            save_button = tk.Button(entries_frame, text="Usuń ucznia", command=lambda: Uczeń.usuń_ucznia(entry_fields))
+            save_button.grid(row=2 + len(labels), column=2, pady=10)
+
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista uczniów")
+            label.grid(row=2, column=3, padx=5, pady=5, sticky="ew")
+            for i in Uczeń.lista_uczniów:
+                listbox.insert(tk.END, i.imie + '   ' + i.nazwisko + "   " + i.pesel + "   " + i.nazwa_grupy)
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=5, sticky="nsew")
             return
         #edytowanie ucznia
 

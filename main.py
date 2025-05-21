@@ -1,73 +1,83 @@
-# class Uczen:
-#     List < Ocena >
-#     List < Obecnosc >
-#     Grupa
-#
-#     def wyswietlSredniaUcznia():
-#         srednia = 0
-#         ile = 0
-#         for i in Oceny:
-#             srednia = +i
-#             ile + +
-#         return srednia / ile
-#
-#     def czyZagrozony(self):
-#         if nieobecnosci > 3:
-#             zagrozony
-
 import tkinter as tk
 
 class Uczeń:
-    def __init__(self, imie:str, nazwisko:str, pesel:str, nazwa_grupy):
+    lista_uczniów = []
+    def __init__(self, imie:str, nazwisko:str, pesel:str, nazwa_grupy:str):
         self.imie = imie
         self.nazwisko = nazwisko
-        self.pesel(pesel)
+        if len(pesel) == 11 and pesel.isdigit():
+            self.pesel=pesel
         self.nazwa_grupy = nazwa_grupy
-        self.lista_ocen = []
-        self.lista_obecności =[]
 
     @property
     def imie(self):
         return self._imie
+
     @imie.setter
     def imie(self, nowe_imie):
         self._imie = nowe_imie
+
     @property
     def nazwisko(self):
         return self._nazwisko
+
     @nazwisko.setter
     def nazwisko(self, nowe_nazwisko):
         self._nazwisko = nowe_nazwisko
+
     @property
     def pesel(self):
         return self._pesel
+
     @pesel.setter
     def pesel(self, nowy_pesel):
         if len(nowy_pesel) == 11 and nowy_pesel.isdigit():
             self._pesel = nowy_pesel
         else:
             raise ValueError("Pesel składa się z 11 cyfr!")
+
     @property
     def nazwa_grupy(self):
         return self._nazwa_grupy
+
     @nazwa_grupy.setter
     def nazwa_grupy(self, nowa_nazwa_grupy):
         self._nazwa_grupy = nowa_nazwa_grupy
 
+    def oblicz_średnią(self):
+        średnia=0.0
+        liczba_ocen=0
+        for i in Ocena.lista_ocen:
+            if i.uczeń.pesel == self._pesel:
+                średnia += i
+                liczba_ocen += 1
+        średnia = średnia/len(self.lista_ocen)
+        return średnia
+
+    #def czy_zagrożony(self):
+
+
 class Grupa:
-    def __init__(self, nazwa:str):
+    lista_grup = []
+    def __init__(self, nazwa:str, uczniowie:list):
         self.nazwa = nazwa
-        self.uczniowie = []
+        self.uczniowie = uczniowie
 
     @property
     def nazwa(self):
-        return self.uczniowie
+        return self._nazwa
+
     @nazwa.setter
     def nazwa(self, nowe_nazwa):
         self._nazwa = nowe_nazwa
+
     @property
     def uczniowie(self):
-        return self.uczniowie
+        return self._uczniowie
+
+    @uczniowie.setter
+    def uczniowie(self, nowe_uczniowie):
+        self._uczniowie = nowe_uczniowie
 
     def dodaj_ucznia(self, uczeń_imie:str,uczeń_nazwisko:str,uczeń_pesel:str):
         uczeń=Uczeń(imie=uczeń_imie, nazwisko=uczeń_nazwisko, pesel=uczeń_pesel, nazwa_grupy=self.nazwa)
@@ -80,21 +90,23 @@ class Grupa:
             raise ValueError("Taki uczeń nie istnieje w tej grupie")
 
 class Ocena:
-    def __innit__(self, uczen:Uczeń, opis:str, data:str):
-        self.uczen=uczen
+    lista_ocen = []
+    def __init__(self, uczeń:Uczeń, opis:str, data:str):
+        self.uczeń=uczeń
         self.opis=opis
         self.data=data
 
     @property
-    def uczen(self):
-        return self.uczen
-    @uczen.setter
-    def uczen(self, nowy_uczen):
-        self._uczen = nowy_uczen
+    def uczeń(self):
+        return self.uczeń
+
+    @uczeń.setter
+    def uczeń(self, nowy_uczeń):
+        self._uczeń = nowy_uczeń
 
     @property
     def opis(self):
-        return self.opi
+        return self.opis
 
     @opis.setter
     def opis(self, nowy_opis):
@@ -105,43 +117,87 @@ class Ocena:
         return self.data
 
     @data.setter
-    def data(self, nowy_data):
-        self._data = nowy_data
+    def data(self, nowa_data):
+        self._data = nowa_data
 
 
-class Obecnosc:
-    def __init__(self, uczen:Uczeń, data:str, status:str):
-        self.uczen=uczen
+class Obecność:
+    lista_obecności = []
+    def __init__(self, uczeń:Uczeń, data:str, status:str):
+        self.uczeń=uczeń
         self.data=data
         self.status=status
 
     @property
-    def uczen(self):
-        return self.uczen
+    def uczeń(self):
+        return self.uczeń
 
-    @uczen.setter
-    def uczen(self, nowy_uczen):
-        self._uczen = nowy_uczen
+    @uczeń.setter
+    def uczeń(self, nowy_uczeń):
+        self._uczeń = nowy_uczeń
 
     @property
     def data(self):
         return self.data
+
     @data.setter
-    def data(self, nowy_data):
-        self._data = nowy_data
+    def data(self, nowa_data):
+        self._data = nowa_data
 
     @property
     def status(self):
         return self.status
+
     @status.setter
     def status(self, nowy_status):
         self._status = nowy_status
 
-window = tk.Tk()
-window.geometry("400x400")
-window.title("Dynamiczne pola tekstowe")
+def wczytywanie_z_pliku(nazwa:str):
+    try:
+        with (open(nazwa, "r", encoding="utf-8") as plik):
+            for linia in plik:
+                dane = linia.strip().split("\t")
+                if nazwa == "Uczniowie.txt":
+                    uczen = Uczeń(imie=dane[0], nazwisko= dane[1], pesel= dane[2], nazwa_grupy= dane[3])
+                    Uczeń.lista_uczniów.append(uczen)
+                elif nazwa == "Grupy.txt":
+                    uczen_grupa=[]
+                    for i in Uczeń.lista_uczniów:
+                        if i.nazwa_grupy == dane[0]:
+                            uczen_grupa.append(i)
+                    grupa = Grupa(nazwa= dane[0],uczniowie = uczen_grupa)
+                    Grupa.lista_grup.append(grupa)
+                elif nazwa == "Oceny.txt":
+                    pesel = dane[0]
+                    for i in Uczeń.lista_uczniów:
+                        if i.pesel == pesel:
+                            ocena = Ocena(uczeń=i, opis=dane[1], data=dane[2])
+                            Ocena.lista_ocen.append(ocena)
+                            break
+                elif nazwa == "Obecności.txt":
+                    pesel = dane[0]
+                    for i in Uczeń.lista_uczniów:
+                        if i.pesel == pesel:
+                            obecność = Obecność(uczeń=i, data=dane[1], status=dane[2])
+                            Obecność.lista_obecności.append(obecność)
+                            break
+    except FileNotFoundError:
+        print(f"Plik '{nazwa}' nie istnieje.")
 
-entries_frame = tk.Frame(window)
+wczytywanie_z_pliku("Uczniowie.txt")
+wczytywanie_z_pliku("Grupy.txt")
+wczytywanie_z_pliku("Oceny.txt")
+wczytywanie_z_pliku("Obecności.txt")
+
+for i in Grupa.lista_grup:
+    print(i.nazwa)
+
+
+okno_aplikacji = tk.Tk()
+okno_aplikacji.geometry("600x400")
+okno_aplikacji.title("Dziennik nauczyciela")
+
+entries_frame = tk.Frame(okno_aplikacji)
 entries_frame.grid(row=1, column=0, padx=10, pady=20)
 
 ocenaLubObecnosc=[]
@@ -150,7 +206,7 @@ def update_ocenaLubObecnosc(sel):
         widget.destroy()
     ocenaLubObecnosc.clear()
 
-opcjeOcLubOb = tk.StringVar(window)
+opcjeOcLubOb = tk.StringVar(okno_aplikacji)
 opcjeOcLubOb.set("Wybierz opcję")
 options2 = ["Ocena", "Obecnosc"]
 
@@ -161,19 +217,22 @@ def update_entries(selection):
     entry_fields.clear()
 
     match(selection):
-        case "Dodaj ucznia":
-            for i in range(4):
+        case "Dodawanie ucznia":
+            labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2+i, column=1, padx=7, pady=10,sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             return
-        case "Sprawdz obecnosc":
+        case "Sprawdzanie obecności":
             for i in range(3):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             return
-        case "Wystawienie ocen":
+        case "Wystawianie oceny":
             for i in range(4):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
@@ -182,7 +241,7 @@ def update_entries(selection):
             entry.grid(row=3, column=3, padx=7, pady=10)
             entry_fields.append(entry)
             return
-        case "Edycja oceny/obecnosci danego dnia":
+        case "Edycja oceny/obecności danego dnia":
             for i in range(2):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
@@ -193,25 +252,25 @@ def update_entries(selection):
             entry.grid(row=5, column=2, padx=7, pady=10)
             entry_fields.append(entry)
             return
-        case "Wyswietlenie oceny/obecnosci danego ucznia":
+        case "Wyświetlenie oceny/obecności danego ucznia":
             for i in range(3):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             return
-        case "Wystawienie zagrozenia":
+        case "Wystawianie zagrożenia":
             for i in range(2):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             return
-        case "Wyswietl srednia ucznia":
+        case "Wyświetl średnią ucznia":
             for i in range(2):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             return
-        case "Wygeneruj raport z ocen i obecnosci uczniow":
+        case "Wygeneruj raport z ocen i obecności uczniów":
             entry = tk.Entry(entries_frame, width=15)
             entry.grid(row=2, column=2, padx=7, pady=10)
             entry_fields.append(entry)
@@ -232,20 +291,19 @@ def show_values():
         print(f"Pole {i + 1}: {entry.get()}")
 
 
-selected_option = tk.StringVar(window)
+selected_option = tk.StringVar(okno_aplikacji)
 selected_option.set("Wybierz opcję")
-options = ["Dodaj ucznia", "Sprawdz obecnosc", "Wystawienie ocen",
-           "Edycja oceny/obecnosci danego dnia",
-           "Wyswietlenie oceny/obecnosci danego ucznia",
-           "Wystawienie zagrozenia",
-           "Wyswietl srednia ucznia",
-           "Wygeneruj raport z ocen i obecnosci uczniow",
-           "Generowanie statystyk"
-           ]
-dropdown = tk.OptionMenu(window, selected_option, *options, command=update_entries)
+options = ["Dodawanie ucznia", "Sprawdzanie obecności", "Wystawianie oceny",
+           "Edycja oceny/obecności danego dnia",
+           "Wyświetlenie oceny/obecności danego ucznia",
+           "Wystawianie zagrożenia",
+           "Wyświetl średnią ucznia",
+           "Wygeneruj raport z ocen i obecności uczniów",
+           "Generowanie statystyk"]
+dropdown = tk.OptionMenu(okno_aplikacji, selected_option, *options, command=update_entries)
 dropdown.grid(row=0, column=0, pady=10)
 
-show_button = tk.Button(window, text="Pokaż dane", command=show_values)
+show_button = tk.Button(okno_aplikacji, text="Pokaż dane", command=show_values)
 show_button.grid(row=2, column=4, pady=10)
 
-window.mainloop()
+okno_aplikacji.mainloop()

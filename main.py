@@ -211,10 +211,6 @@ wczytywanie_z_pliku("Grupy.txt")
 wczytywanie_z_pliku("Oceny.txt")
 wczytywanie_z_pliku("Obecności.txt")
 
-for i in Grupa.lista_grup:
-    print(i.nazwa)
-
-
 okno_aplikacji = tk.Tk()
 okno_aplikacji.geometry("600x400")
 okno_aplikacji.title("Dziennik nauczyciela")

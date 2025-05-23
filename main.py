@@ -1,4 +1,5 @@
 import tkinter as tk
+from cProfile import label
 from itertools import count
 
 
@@ -134,26 +135,35 @@ class Grupa:
             if len(i.uczniowie) == 0:
                 Grupa.lista_grup.remove(i)
 
-    def dodaj_ucznia(self, uczeń_imie:str,uczeń_nazwisko:str,uczeń_pesel:str):
-        uczeń=Uczeń(imie=uczeń_imie, nazwisko=uczeń_nazwisko, pesel=uczeń_pesel, nazwa_grupy=self.nazwa)
-        #w tym przypadku naleźy dodać takiego ucznia do istniejących uczniów w klasie uczeń lub dopisać do pliku txt
-        self.uczniowie.append(uczeń)
-    def usun_ucznia(self, uczeń):
-        if uczeń in self.uczniowie:
-            self.uczniowie.remove(uczeń)
-        else:
-            raise ValueError("Taki uczeń nie istnieje w tej grupie")
+    # def dodaj_ucznia(self, uczeń_imie:str,uczeń_nazwisko:str,uczeń_pesel:str):
+    #     uczeń=Uczeń(imie=uczeń_imie, nazwisko=uczeń_nazwisko, pesel=uczeń_pesel, nazwa_grupy=self.nazwa)
+    #     #w tym przypadku naleźy dodać takiego ucznia do istniejących uczniów w klasie uczeń lub dopisać do pliku txt
+    #     self.uczniowie.append(uczeń)
+    # def usun_ucznia(self, uczeń):
+    #     if uczeń in self.uczniowie:
+    #         self.uczniowie.remove(uczeń)
+    #     else:
+    #         raise ValueError("Taki uczeń nie istnieje w tej grupie")
 
 class Ocena:
     lista_ocen = []
-    def __init__(self, uczeń:Uczeń, opis:str, data:str):
+    def __init__(self, uczeń:Uczeń, opis:str, data:str, wartość:str):
+        self.wartość=wartość
         self.uczeń=uczeń
         self.opis=opis
         self.data=data
 
     @property
+    def wartość(self):
+        return self._wartość
+
+    @wartość.setter
+    def wartość(self, nowa_wartość):
+        self._wartość = nowa_wartość
+
+    @property
     def uczeń(self):
-        return self.uczeń
+        return self._uczeń
 
     @uczeń.setter
     def uczeń(self, nowy_uczeń):
@@ -161,7 +171,7 @@ class Ocena:
 
     @property
     def opis(self):
-        return self.opis
+        return self._opis
 
     @opis.setter
     def opis(self, nowy_opis):
@@ -169,11 +179,31 @@ class Ocena:
 
     @property
     def data(self):
-        return self.data
+        return self._data
 
     @data.setter
     def data(self, nowa_data):
         self._data = nowa_data
+
+    def dodaj_ocene(entry_fields):
+        try:
+            imie = entry_fields[0].get()
+            nazwisko = entry_fields[1].get()
+            pesel = entry_fields[2].get()
+            grupa = entry_fields[3].get()
+            nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
+            opis = entry_fields[4].get()
+            data = entry_fields[5].get()
+            wartość = entry_fields[6].get()
+            nowa_ocena = Ocena(uczeń=nowy_uczen,opis=opis, data=data,wartość=wartość)
+            Ocena.lista_ocen.append(nowa_ocena)
+            print(f"Dodano ocenę {wartość} z: {opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
+            for i in Ocena.lista_ocen:
+                print(i.uczeń.imie+" "+i.uczeń.nazwisko+" "+i.uczeń.pesel+" "+i.uczeń.nazwa_grupy+" "+i.opis+" "+i.data+" "+i.wartość)
+                wypisywanie_błędów("")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
 
 
 class Obecność:
@@ -185,7 +215,7 @@ class Obecność:
 
     @property
     def uczeń(self):
-        return self.uczeń
+        return self._uczeń
 
     @uczeń.setter
     def uczeń(self, nowy_uczeń):
@@ -193,7 +223,7 @@ class Obecność:
 
     @property
     def data(self):
-        return self.data
+        return self._data
 
     @data.setter
     def data(self, nowa_data):
@@ -201,7 +231,7 @@ class Obecność:
 
     @property
     def status(self):
-        return self.status
+        return self._status
 
     @status.setter
     def status(self, nowy_status):
@@ -226,7 +256,7 @@ def wczytywanie_z_pliku(nazwa:str):
                     pesel = dane[0]
                     for i in Uczeń.lista_uczniów:
                         if i.pesel == pesel:
-                            ocena = Ocena(uczeń=i, opis=dane[1], data=dane[2])
+                            ocena = Ocena(uczeń=i, opis=dane[1], data=dane[2],wartość=3)
                             Ocena.lista_ocen.append(ocena)
                             break
                 elif nazwa == "Obecności.txt":
@@ -250,7 +280,7 @@ wczytywanie_z_pliku("Oceny.txt")
 wczytywanie_z_pliku("Obecności.txt")
 
 okno_aplikacji = tk.Tk()
-okno_aplikacji.geometry("600x400")
+okno_aplikacji.geometry("600x420")
 okno_aplikacji.title("Dziennik nauczyciela")
 
 entries_frame = tk.Frame(okno_aplikacji)
@@ -340,13 +370,28 @@ def update_entries(selection):
                 entry_fields.append(entry)
             return
         case "Wystawianie oceny":
-            for i in range(4):
+            labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy","Tytuł oceny","Data","Ocena"]
+            for i in range(7):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
+                entry.grid(row=2+i, column=2, padx=5, pady=5)
                 entry_fields.append(entry)
-            entry = tk.Entry(entries_frame, width=15)
-            entry.grid(row=3, column=3, padx=7, pady=10)
-            entry_fields.append(entry)
+
+            save_button = tk.Button(entries_frame, text="Dodaj ocenę", command=lambda: Ocena.dodaj_ocene(entry_fields))
+            save_button.grid(row=2 + len(labels), column=3, pady=0)
+
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista ocen")
+            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
+            for i in Ocena.lista_ocen:
+                listbox.insert(tk.END, i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(i.wartość))
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
         case "Edycja oceny/obecności danego dnia":
             for i in range(2):

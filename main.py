@@ -93,6 +93,9 @@ class Uczeń:
             if count == 0:
                 raise ValueError("Nieistnieje taka osoba")
             print(f"Usunięto ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
+            Grupa.czyszczenie_grup()
+
+
             for i in Uczeń.lista_uczniów:
                 print(i.imie + " " + i.nazwisko + " " + i.pesel + " " + i.nazwa_grupy)
                 wypisywanie_błędów("")
@@ -124,6 +127,12 @@ class Grupa:
     @uczniowie.setter
     def uczniowie(self, nowe_uczniowie):
         self._uczniowie = nowe_uczniowie
+
+    @staticmethod
+    def czyszczenie_grup():
+        for i in Grupa.lista_grup:
+            if len(i.uczniowie) == 0:
+                Grupa.lista_grup.remove(i)
 
     def dodaj_ucznia(self, uczeń_imie:str,uczeń_nazwisko:str,uczeń_pesel:str):
         uczeń=Uczeń(imie=uczeń_imie, nazwisko=uczeń_nazwisko, pesel=uczeń_pesel, nazwa_grupy=self.nazwa)

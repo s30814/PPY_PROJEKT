@@ -1,6 +1,6 @@
 import tkinter as tk
-from cProfile import label
-from itertools import count
+from datetime import datetime
+from time import strptime
 
 
 class Uczeń:
@@ -88,7 +88,7 @@ class Uczeń:
             grupa = entry_fields[3].get()
             count=0
             for i in Uczeń.lista_uczniów:
-                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa and i.pesel == pesel:
+                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
                     Uczeń.lista_uczniów.remove(i)
                     count += 1
             if count == 0:
@@ -110,6 +110,9 @@ class Uczeń:
 class Grupa:
     lista_grup = []
     def __init__(self, nazwa:str, uczniowie:list):
+        for i in Grupa.lista_grup:
+            if i.nazwa == nazwa:
+                raise ValueError("Taka grupa już istnieje")
         self.nazwa = nazwa
         self.uczniowie = uczniowie
 
@@ -148,10 +151,17 @@ class Grupa:
 class Ocena:
     lista_ocen = []
     def __init__(self, uczeń:Uczeń, opis:str, data:str, wartość:str):
-        self.wartość=wartość
+        if str(wartość).isdigit() and float(wartość)>=1.0 and float(wartość)<=6.0:
+            self.wartość=wartość
+        else:
+            raise ValueError("Ocena może być tylko z zakresu od 1 do 6, zapisana liczbowo np. 4.5")
         self.uczeń=uczeń
         self.opis=opis
-        self.data=data
+        try:
+            datetime.strptime(data, "%d.%m.%Y")
+            self.data=data
+        except:
+            raise ValueError("Niepoprawna data")
 
     @property
     def wartość(self):
@@ -191,15 +201,25 @@ class Ocena:
             nazwisko = entry_fields[1].get()
             pesel = entry_fields[2].get()
             grupa = entry_fields[3].get()
-            nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
+            count = 0
+            nowy_uczen = None
+            for i in Uczeń.lista_uczniów:
+                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
+                    nowy_uczen=i
+                    count += 1
+            if count == 0:
+                raise ValueError("Nieistnieje taka osoba")
             opis = entry_fields[4].get()
             data = entry_fields[5].get()
             wartość = entry_fields[6].get()
+            for i in Ocena.lista_ocen:
+                if i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel and i.uczeń.nazwa_grupy == grupa and i.opis==opis and i.wartość==wartość:
+                    raise ValueError("Taka ocena już została dodana dla tej osoby")
             nowa_ocena = Ocena(uczeń=nowy_uczen,opis=opis, data=data,wartość=wartość)
             Ocena.lista_ocen.append(nowa_ocena)
             print(f"Dodano ocenę {wartość} z: {opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
             for i in Ocena.lista_ocen:
-                print(i.uczeń.imie+" "+i.uczeń.nazwisko+" "+i.uczeń.pesel+" "+i.uczeń.nazwa_grupy+" "+i.opis+" "+i.data+" "+i.wartość)
+                print(i.uczeń.imie+" "+i.uczeń.nazwisko+" "+i.uczeń.pesel+" "+i.uczeń.nazwa_grupy+" "+i.opis+" "+i.data+" "+str(i.wartość))
                 wypisywanie_błędów("")
         except ValueError as e:
             wypisywanie_błędów(e)

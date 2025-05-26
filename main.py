@@ -77,6 +77,7 @@ class Uczeń:
                     print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
                     wypisywanie_błędów("")
                 plik.write("\n"+imie+"\t"+nazwisko+"\t"+pesel+"\t"+grupa+"\n")
+            plik.close()
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -105,6 +106,7 @@ class Uczeń:
             for i in Uczeń.lista_uczniów:
                 print(i.imie + " " + i.nazwisko + " " + i.pesel + " " + i.nazwa_grupy)
                 wypisywanie_błędów("")
+            plik.close()
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -228,16 +230,20 @@ class Ocena:
                     print(i.uczeń.imie+" "+i.uczeń.nazwisko+" "+i.uczeń.pesel+" "+i.uczeń.nazwa_grupy+" "+i.opis+" "+i.data+" "+str(i.wartość))
                     wypisywanie_błędów("")
                 plik.write("\n"+pesel+"\t"+opis+"\t"+data+"\t"+wartość)
+                plik.close()
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
     def edytuj_ocene(self_fields):
         try:
-            with (open("Uczniowie.txt", "w", encoding="utf-8") as plik):
+            with (open("Oceny.txt", "w", encoding="utf-8") as plik):
                 imie = entry_fields[0].get()
+                print("imie: "+imie)
                 nazwisko = entry_fields[1].get()
+                print("nazwisko: "+nazwisko)
                 pesel = entry_fields[2].get()
+                print("pesel: "+pesel)
 
                 nowy_uczen = None
                 for i in Uczeń.lista_uczniów:
@@ -245,25 +251,26 @@ class Ocena:
                         nowy_uczen = i
 
                 data = entry_fields[3].get()
+                print("data: "+data)
                 wartosc_oceny = entry_fields[4].get()
+                print("wartosc_oceny: "+wartosc_oceny)
                 opis_oceny = entry_fields[5].get()
-                nowa_wartosc = entry_fields[6].get()
+                print("opis_oceny: "+opis_oceny)
+                nowa_wartosc2 = entry_fields[6].get()
+                print("nowa_wartosc: "+nowa_wartosc2)
                 nowy_opis = entry_fields[7].get()
-                for i in Ocena.lista_ocen:
-                    if (i.uczeń.pesel == pesel and i.wartość == wartosc_oceny and i.opis == opis_oceny and i.data == data):
-                        Ocena.lista_ocen.remove(i)
-                nowa_ocena = Ocena(nowy_uczen, nowy_opis, data, nowa_wartosc)
+                print("nowy_opis: "+nowy_opis)
+
+                nowa_ocena = Ocena(nowy_uczen, nowy_opis, data, nowa_wartosc2)
                 Ocena.lista_ocen.append(nowa_ocena)
 
-                print(
-                f"Dodano ocenę {nowa_wartosc} z: {nowy_opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}")
                 for i in Ocena.lista_ocen:
-                    print(
-                    i.uczeń.imie + " " + i.uczeń.nazwisko + " " + i.uczeń.pesel + " " + i.uczeń.nazwa_grupy + " " + i.opis + " " + i.data + " " + str(
-                        i.wartość))
+                    if (i.uczeń.pesel == pesel and i.wartość == wartosc_oceny and i.opis == opis_oceny and i.data == data):
+                        print(i.uczeń.pesel + " " + i.wartość == wartosc_oceny + " " + i.opis == opis_oceny + " " + i.data == data)
+                        Ocena.lista_ocen.remove(i)
                     wypisywanie_błędów("")
                 for i in Ocena.lista_ocen:
-                    plik.write(i.uczeń.pesel+"\t"+i.opis+"\t"+i.data+"\t"+i.wartość+"\n")
+                    plik.write(i.uczeń.pesel+"\t"+i.opis+"\t"+i.data+"\t"+str(i.wartość)+"\n")
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -321,7 +328,7 @@ class Obecność:
                 for i in Obecność.lista_obecności:
                     print(i.uczeń.imie +" "+i.uczeń.nazwisko+" "+i.uczeń.nazwa_grupy+" "+i.status)
                     wypisywanie_błędów("")
-                plik.write("\n" +  pesel + "\t" + data + "\t"+ obecnosc +"\n")
+                plik.write("\n" +  pesel + "\t" + data + "\t"+ obecnosc)
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -567,7 +574,7 @@ def update_entries(selection):
                 entry_fields.append(entry)
 
             save_button = tk.Button(entries_frame, text="Edytuj ocene",
-                                    command=lambda: Ocena.edytuj_ocene(entry_fields))
+                                    command=lambda: Obecność.edytuj_obecnosc(entry_fields))
             save_button.grid(row=2 + len(labels), column=3, pady=0)
 
             entries_frame.grid_columnconfigure(0, weight=0)
@@ -576,12 +583,11 @@ def update_entries(selection):
             entries_frame.grid_columnconfigure(3, weight=1)
 
             listbox = tk.Listbox(entries_frame)
-            label = tk.Label(entries_frame, text="Lista ocen")
+            label = tk.Label(entries_frame, text="Lista obecnosci")
             label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
-            for i in Ocena.lista_ocen:
+            for i in Obecność.lista_obecności:
                 listbox.insert(tk.END,
-                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(
-                                   i.wartość))
+                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.data+" "+i.status)
             listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
         case "Wyświetlenie oceny danego ucznia":

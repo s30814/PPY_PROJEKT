@@ -2,76 +2,118 @@ import tkinter as tk
 from datetime import datetime
 
 #Wyjątki
-
 #1. Wyjątek zwracany gdy użytkownik poda niepoprawny pesel
-class PeselError(Exception):
-    pass
+class WrongPeselError(Exception):
+    def __init__(self, tekst="Nie poprawny pesel, pesel powinien składać się tylko z 11 cyfr"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #2. Wyjątek zwracany gdy użytkownik nie posiada ocen a ktoś chce obliczyć jego średnią
 class BrakOcenError(Exception):
-    pass
+    def __init__(self, tekst="Uczeń nie posiada ocen"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #3. Wyjątek zwracany, gdy użytkownik podał osobę, której nie ma w naszej bazie
 class NonExistingPersonError(Exception):
-    pass
+    def __init__(self, tekst="Taka osoba nie istnieje"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #4. Wyjątek zabezpieczający przed tworzeniem grup, które już istnieją i mają przypisanych uczniów
 class ExistingGroupError(Exception):
-    pass
+    def __init__(self, tekst="Taka grupa już istnieje"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #5. Wyjątek powiadamiający użytkownika o próbie utworzenia oceny z zakresu innego niż 1-6 lub nieodpowiedniego formatu oceny
 class GradeValueError(Exception):
-    pass
+    def __init__(self, tekst="Ocena może być tylko z zakresu od 1 do 6, zapisana liczbowo np. 4.5"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #6. Wyjątek powiadamiający o niepoprawnym podaniu daty lub użyciu złego typu
 class WrongDateError(Exception):
-    pass
+    def __init__(self, tekst="Nie poprawna data, data przykładowa: 23.05.2024"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #7. Wyjątek powiadamiający o próbie dodania oceny, która już jest zapisana w systemie
 class ExistingGradeError(Exception):
-    pass
+    def __init__(self, tekst="Taka ocena już została dodana dla tej osoby"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #8. Wyjątek powiadamiający o próbie edycji oceny, która nie istnieje
 class NonExistingGradeError(Exception):
-    pass
+    def __init__(self, tekst="Taka ocena nie istnieje"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #9. Wyjątek powiadamiający o próbie wyświetlenia ocen ucznia, który nie posiada ocen
 class NonExistingGradesError(Exception):
-    pass
+    def __init__(self, tekst="Ten uczeń nie ma ocen"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #10. Wyjątek powiadamiający użytkownika o użyciu niepoprawnego statusu obecności ucznia
 class WrongStatusError(Exception):
-    pass
+    def __init__(self, tekst="Status obecności może być równy tylko: obecny, nieobecny, spóźniony lub usprawiedliwiony"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #11. Wyjątek powiadamiający użytkownika o istnieniu takiej obecności użytkownika w systemie
 class ExistingPresenceOfStudentError(Exception):
-    pass
+    def __init__(self, tekst="Taka obecność już istnieje dla tej osoby"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #12. Wyjątek powiadamiający o wykorzystaniu nie istniejącej w systemie obecności ucznia
 class NonExistingPresenceOfStudentError(Exception):
-    pass
+    def __init__(self, tekst="Taka obecność nie istnieje"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
 #13. Wyjątek powiadamiający o próbie wyświetlenia obecności ucznia, który jeszcze nie posiada obecności
 class NonExistingPresencesOfStudentsError(Exception):
-    pass
+    def __init__(self, tekst="Ten uczeń jeszcze nie ma wpisanych obecności"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
 
-#Klasy umożliwiające działanie funkcjonalności aplikacji oraz reprezentujące naszą bazę danych przechowywaną za pomocą
-#plików .txt
+#14. Wyjątek powiadamiający o próbie dodania osoby, która już istnieje w naszej bazie
+class ExistingPersonError(Exception):
+    def __init__(self,tekst="Osoba o takim peselu już jest na liście"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
+
+#15. Wyjątek powiadamiający użytkownika, że wszystkie pola muszą być wypełnione i nie mogą być wartości None
+class NoneUsageError(Exception):
+    def __init__(self,tekst="Wszystkie pola muszą być wypełnione, nie mogą pozostać puste!"):
+        self.tekst = tekst
+        super().__init__(self.tekst)
+#Klasy umożliwiające działanie funkcjonalności aplikacji oraz reprezentujące naszą bazę danych
+#przechowywaną za pomocą plików .txt
 #Klasa będąca reprezentacją uczniów
 class Uczeń:
+    #Lista klasowa odpowiadająca za wszystkie obiekty uczeń, pomaga w przeszukiwaniu obiektów uczeń oraz
+    #dzięki niej po zamknięciu aplikacji uczniowie zostają zapisani do pliku .txt
     lista_uczniów = []
+    #Konstruktor
     def __init__(self, imie:str, nazwisko:str, pesel:str, nazwa_grupy:str):
-        self.imie = imie
-        self.nazwisko = nazwisko
-        for i in Uczeń.lista_uczniów:
-            if i.pesel == pesel:
-                raise PeselError("Osoba o takim peselu już jest na liście")
-        if len(pesel) == 11 and pesel.isdigit():
-            self._pesel=pesel
+        if imie=="" or nazwa_grupy=="" or pesel=="" or nazwa_grupy=="":
+            raise NoneUsageError()
         else:
-            raise PeselError("Nie poprawny pesel")
-        self.nazwa_grupy = nazwa_grupy
-        self.zagrożenie = False
+            self.imie = imie
+            self.nazwisko = nazwisko
+            for i in Uczeń.lista_uczniów:
+                if i.pesel == pesel:
+                    raise ExistingPersonError()
+            if len(pesel) == 11 and pesel.isdigit():
+                self._pesel=pesel
+            else:
+                raise WrongPeselError()
+            self.nazwa_grupy = nazwa_grupy
+            self.zagrożenie = False
 
     #gettery i settery
     @property
@@ -79,13 +121,19 @@ class Uczeń:
         return self._imie
     @imie.setter
     def imie(self, nowe_imie):
-        self._imie = nowe_imie
+        if nowe_imie=="":
+            raise NoneUsageError()
+        else:
+            self._imie = nowe_imie
     @property
     def nazwisko(self):
         return self._nazwisko
     @nazwisko.setter
     def nazwisko(self, nowe_nazwisko):
-        self._nazwisko = nowe_nazwisko
+        if nowe_nazwisko == "":
+            raise NoneUsageError()
+        else:
+            self._nazwisko = nowe_nazwisko
     @property
     def pesel(self):
         return self._pesel
@@ -94,13 +142,16 @@ class Uczeń:
         if len(nowy_pesel) == 11 and nowy_pesel.isdigit():
             self._pesel = nowy_pesel
         else:
-            raise PeselError("Pesel składa się z 11 cyfr!")
+            raise WrongPeselError()
     @property
     def nazwa_grupy(self):
         return self._nazwa_grupy
     @nazwa_grupy.setter
     def nazwa_grupy(self, nowa_nazwa_grupy):
-        self._nazwa_grupy = nowa_nazwa_grupy
+        if nowa_nazwa_grupy == "":
+            raise NoneUsageError()
+        else:
+            self._nazwa_grupy = nowa_nazwa_grupy
     @property
     def zagrożenie(self):
         return self._zagrożenie
@@ -108,6 +159,7 @@ class Uczeń:
     def zagrożenie(self,nowa_wartosc):
         self._zagrożenie = nowa_wartosc
 
+    #Funkcja służąca do obliczania średniej obiektu uczeń
     def oblicz_średnią(self):
         średnia=0.0
         liczba_ocen=0
@@ -117,9 +169,11 @@ class Uczeń:
                 liczba_ocen += 1
         średnia = średnia/liczba_ocen
         if liczba_ocen == 0:
-            return BrakOcenError("Uczeń nie posiada ocen")
+            return BrakOcenError()
         return średnia
 
+    #Funkcja statyczna pozwalająca dodać ucznia do naszej bazy oraz zarazem tworząca grupę, do której
+    #student należy lub dodająca go do już istniejącej grupy ucznia
     @staticmethod
     def dodaj_ucznia(entry_fields):
         try:
@@ -146,6 +200,8 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    #Funkcja usuwająca ucznia z naszej bazy oraz wszystkie z nim związane inne obiekty, jeśli tylko on
+    #należał do grupy to grupa również jest usuwana
     @staticmethod
     def usuń_ucznia(entry_fields):
         try:
@@ -169,7 +225,7 @@ class Uczeń:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             print(f"Usunięto ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
             for i in Uczeń.lista_uczniów:
                 print(i.imie + " " + i.nazwisko + " " + i.pesel + " " + i.nazwa_grupy)
@@ -178,6 +234,8 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    #Funkcja statyczna wyszukująca w liście (reprezentacji bazy danych) poszukiwanego studenta oraz
+    #zwracająca jego średnią, funkcja używana do GUI
     @staticmethod
     def wyświetl_średnią_ucznia(entry_fields):
         try:
@@ -187,12 +245,13 @@ class Uczeń:
             for i in Uczeń.lista_uczniów:
                 if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel:
                     return i.oblicz_średnią()
-            raise NonExistingPersonError("Nie istnieje taka osoba")
+            raise NonExistingPersonError()
         except Exception as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
             return 0.0
 
+    #Metoda statyczna wystawiająca zagrożenia wszystkim uczniom, którzy powinni je mieć
     @staticmethod
     def wystaw_zagrożenia():
         for j in Uczeń.lista_uczniów:
@@ -213,6 +272,7 @@ class Uczeń:
             elif j.oblicz_średnią()<3.0:
                 j.zagrożenie=True
 
+    #Metoda statyczna pokazująca w GUI nauczycielowi czy uczeń i dlaczego ma zagrożenie
     @staticmethod
     def czy_zagrożony(entry_fields):
         liczba_lekcji=0
@@ -230,115 +290,118 @@ class Uczeń:
                 liczba_lekcji += 1
                 if i.status.lower()=="nieobecny":
                     liczba_nb+=1
-                elif i.status.lower() == "spóźniony":
+                elif i.status.lower()=="spóźniony":
                     liczba_sp+=1
         try:
-            odp=[]
-            odp.append("Liczba lekcji: "+str(liczba_lekcji))
-            odp.append("Liczba nieobecności: "+str(liczba_nb))
-            odp.append("Liczba spóźnień: "+str(liczba_sp))
-            odp.append("")
+            zwrot_do_konsoli=[]
+            zwrot_do_konsoli.append("Liczba lekcji: "+str(liczba_lekcji))
+            zwrot_do_konsoli.append("Liczba nieobecności: "+str(liczba_nb))
+            zwrot_do_konsoli.append("Liczba spóźnień: "+str(liczba_sp))
+            zwrot_do_konsoli.append("")
             if count==0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             elif liczba_nb > 2:
-                odp.append("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności.")
+                zwrot_do_konsoli.append("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności.")
             elif float(liczba_sp) >= float(liczba_lekcji)/2:
-                odp.append("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji.")
+                zwrot_do_konsoli.append("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji.")
             elif uczen.oblicz_średnią()<3.0:
-                odp.append("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0.")
+                zwrot_do_konsoli.append("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0.")
             else:
-                odp.append("Uczeń nie jest zagrożony")
+                zwrot_do_konsoli.append("Uczeń nie jest zagrożony")
             wypisywanie_błędów("")
-            return odp
+            return zwrot_do_konsoli
         except Exception as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
             return []
 
+#Klasa będąca reprezentacją grup/klas uczniów, to w niej są przypisane listy do grupy
 class Grupa:
     lista_grup = []
     def __init__(self, nazwa:str, uczniowie:list):
-        for i in Grupa.lista_grup:
-            if i.nazwa == nazwa:
-                raise ExistingGroupError("Taka grupa już istnieje")
-        self.nazwa = nazwa
-        self.uczniowie = uczniowie
+        if nazwa == "":
+            raise NoneUsageError()
+        else:
+            for i in Grupa.lista_grup:
+                if i.nazwa == nazwa:
+                    raise ExistingGroupError()
+            self.nazwa = nazwa
+            self.uczniowie = uczniowie
 
+    #Gettery i settery
     @property
     def nazwa(self):
         return self._nazwa
-
     @nazwa.setter
     def nazwa(self, nowe_nazwa):
-        self._nazwa = nowe_nazwa
-
+        if nowe_nazwa == "":
+            raise NoneUsageError()
+        else:
+            self._nazwa = nowe_nazwa
     @property
     def uczniowie(self):
         return self._uczniowie
-
     @uczniowie.setter
     def uczniowie(self, nowe_uczniowie):
         self._uczniowie = nowe_uczniowie
 
-    @staticmethod
-    def czyszczenie_grup():
-        for i in Grupa.lista_grup:
-            if len(i.uczniowie) == 0:
-                Grupa.lista_grup.remove(i)
+#Klasa reprezentująca oceny uczniów, jest listą przypisanych ocen do ucznia
 class Ocena:
     lista_ocen = []
+    #konstruktor
     def __init__(self, uczeń:Uczeń, opis:str, data:str, wartość:str):
-        if str(wartość).isdigit() and float(wartość)>=1.0 and float(wartość)<=6.0:
-            self.wartość=wartość
+        if opis == "" or data == "" or wartość=="":
+            raise NoneUsageError()
         else:
-            raise GradeValueError("Ocena może być tylko z zakresu od 1 do 6, zapisana liczbowo np. 4.5")
-        self.uczeń=uczeń
-        self.opis=opis
-        try:
-            datetime.strptime(data, "%d.%m.%Y")
-            self.data=data
-        except:
-            raise WrongDateError("Nie poprawna data, data przykładowa: 23.05.2024")
+            if str(wartość).isdigit() and float(wartość)>=1.0 and float(wartość)<=6.0:
+                self.wartość=wartość
+            else:
+                raise GradeValueError()
+            self.uczeń=uczeń
+            self.opis=opis
+            try:
+                datetime.strptime(data, "%d.%m.%Y")
+                self.data=data
+            except:
+                raise WrongDateError()
 
+    #gettery i settery
     @property
     def wartość(self):
         return self._wartość
-
     @wartość.setter
     def wartość(self, nowa_wartość):
         if str(nowa_wartość).isdigit() and float(nowa_wartość) >= 1.0 and float(nowa_wartość) <= 6.0:
             self._wartość = nowa_wartość
         else:
-            raise GradeValueError("Ocena może być tylko z zakresu od 1 do 6, zapisana liczbowo np. 4.5")
-
+            raise GradeValueError()
     @property
     def uczeń(self):
         return self._uczeń
-
     @uczeń.setter
     def uczeń(self, nowy_uczeń):
         self._uczeń = nowy_uczeń
-
     @property
     def opis(self):
         return self._opis
-
     @opis.setter
     def opis(self, nowy_opis):
-        self._opis = nowy_opis
-
+        if nowy_opis == "":
+            raise NoneUsageError()
+        else:
+            self._opis = nowy_opis
     @property
     def data(self):
         return self._data
-
     @data.setter
     def data(self, nowa_data):
         try:
             datetime.strptime(nowa_data, "%d.%m.%Y")
             self._data = nowa_data
         except:
-            raise WrongDateError("Nie poprawna data, data przykładowa: 23.05.2024")
+            raise WrongDateError()
 
+    #Metoda statyczna dodająca nowe oceny w powiązaniu z użytkownikiem
     @staticmethod
     def dodaj_ocene(entry_fields):
         try:
@@ -354,13 +417,13 @@ class Ocena:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             opis = entry_fields[4].get()
             data = entry_fields[5].get()
             wartość = entry_fields[6].get()
             for i in Ocena.lista_ocen:
                 if i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel and i.uczeń.nazwa_grupy == grupa and i.opis==opis and str(i.wartość)==str(wartość):
-                    raise ExistingGradeError("Taka ocena już została dodana dla tej osoby")
+                    raise ExistingGradeError()
             nowa_ocena = Ocena(uczeń=nowy_uczen,opis=opis, data=data,wartość=wartość)
             Ocena.lista_ocen.append(nowa_ocena)
             print(f"Dodano ocenę {wartość} z: {opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
@@ -371,6 +434,7 @@ class Ocena:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    #Metoda statyczna pozwalająca edytować oceny
     @staticmethod
     def edytuj_ocene(entry_fields):
         try:
@@ -390,7 +454,7 @@ class Ocena:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             count=0
             for i in Ocena.lista_ocen:
                 if i.uczeń.pesel == pesel and str(i.wartość) == str(wartosc_oceny) and i.opis == opis_oceny and i.data == data:
@@ -398,7 +462,7 @@ class Ocena:
                     Ocena.lista_ocen.remove(i)
                     break
             if count == 0:
-                raise NonExistingGradeError("Nie istnieje taka ocena")
+                raise NonExistingGradeError()
             nowa_ocena = Ocena(nowy_uczen, nowy_opis, data, nowa_wartosc)
             Ocena.lista_ocen.append(nowa_ocena)
             print(f"Dodano ocenę {nowa_wartosc} z: {nowy_opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}")
@@ -409,6 +473,7 @@ class Ocena:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    #Statyczna metoda wyświetlająca w gui wszystkie oceny ucznia, jeśli istnieją
     @staticmethod
     def wyświetl_oceny_ucznia(entry_fields):
         try:
@@ -422,62 +487,65 @@ class Ocena:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             for i in Ocena.lista_ocen:
                 if i.uczeń.imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel:
                     lista_ocen_ucznia.append(i.opis+"   "+i.data+"   "+str(i.wartość))
             if len(lista_ocen_ucznia) == 0:
-                raise NonExistingGradesError("Ten uczeń jeszcze nie ma dodanych ocen")
+                raise NonExistingGradesError()
             return lista_ocen_ucznia
         except Exception as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
             return []
+
+#Klasa reprezentująca obiekty obecności uczniów, jest urzeczywistnieniem Obecności z bazy danych
 class Obecność:
     lista_obecności = []
+    #konstruktor
     def __init__(self, uczeń:Uczeń, data:str, status:str):
-        self.uczeń=uczeń
-        try:
-            datetime.strptime(data, "%d.%m.%Y")
-            self.data = data
-        except:
-            raise WrongDateError("Nie poprawna data, data przykładowa: 23.05.2024")
-        if status.lower() != "obecny" and status.lower() != "nieobecny" and status.lower() != "spóźniony" and status.lower() != "usprawiedliwiony":
-            raise WrongStatusError("Status obecności może być równy tylko: obecny, nieobecny, spóźniony lub usprawiedliwiony")
+        if data == "" or status == "":
+            raise NoneUsageError()
         else:
-            self.status=status
+            self.uczeń=uczeń
+            try:
+                datetime.strptime(data, "%d.%m.%Y")
+                self.data = data
+            except:
+                raise WrongDateError()
+            if status.lower() != "obecny" and status.lower() != "nieobecny" and status.lower() != "spóźniony" and status.lower() != "usprawiedliwiony":
+                raise WrongStatusError()
+            else:
+                self.status=status
 
+    #gettery i settery
     @property
     def uczeń(self):
         return self._uczeń
-
     @uczeń.setter
     def uczeń(self, nowy_uczeń):
         self._uczeń = nowy_uczeń
-
     @property
     def data(self):
         return self._data
-
     @data.setter
     def data(self, nowa_data):
         try:
             datetime.strptime(nowa_data, "%d.%m.%Y")
             self._data = nowa_data
         except:
-            raise WrongDateError("Nie poprawna data, data przykładowa: 23.05.2024")
-
+            raise WrongDateError()
     @property
     def status(self):
         return self._status
-
     @status.setter
     def status(self, nowy_status):
         if nowy_status.lower() != "obecny" and nowy_status.lower() != "nieobecny" and nowy_status.lower() != "spóźniony" and nowy_status.lower() != "usprawiedliwiony":
-            raise WrongStatusError("Status obecności może być równy tylko: obecny, nieobecny, spóźniony lub usprawiedliwiony")
+            raise WrongStatusError()
         else:
             self._status = nowy_status
 
+    #Metoda statyczna odpowiadająca za dodawanie nowych obecności uczniom
     @staticmethod
     def sprawdzanie_obecnosci(entry_fields):
         try:
@@ -495,10 +563,10 @@ class Obecność:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             for i in Obecność.lista_obecności:
                 if i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel and i.data == data:
-                    raise ExistingPresenceOfStudentError("Taka obecność już istnieje dla tej osoby")
+                    raise ExistingPresenceOfStudentError()
             nowa_obecnosc= Obecność(nowy_uczen, data, status)
             Obecność.lista_obecności.append(nowa_obecnosc)
             print(f"Dodano obecność: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa},Data: {data} Status obecności {status}")
@@ -509,6 +577,7 @@ class Obecność:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    #Statyczna metoda służąca do educji istniejących obecności uczniów
     @staticmethod
     def edytuj_obecnosc(entry_fields):
         try:
@@ -526,7 +595,7 @@ class Obecność:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             dodawana_obecność = Obecność(nowy_uczen, data, nowa_obecnosc)
             count=0
             for i in Obecność.lista_obecności:
@@ -535,7 +604,7 @@ class Obecność:
                     Obecność.lista_obecności.remove(i)
                     break
             if count == 0:
-                raise NonExistingPresenceOfStudentError("Nie istnieje taka obecność")
+                raise NonExistingPresenceOfStudentError()
             Obecność.lista_obecności.append(dodawana_obecność)
 
             print(f"Dodano obecność {nowa_obecnosc}, dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}")
@@ -546,6 +615,7 @@ class Obecność:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    #Statyczna metoda zwracająca wszystkie obecności ucznia wraz z datą i statusem
     @staticmethod
     def wyświetl_obecności_ucznia(entry_fields):
         try:
@@ -559,18 +629,20 @@ class Obecność:
                     count += 1
                     break
             if count == 0:
-                raise NonExistingPersonError("Nie istnieje taka osoba")
+                raise NonExistingPersonError()
             for i in Obecność.lista_obecności:
                 if i.uczeń.imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel:
                     lista_obecności_ucznia.append(i.data + "   " + i.status)
             if len(lista_obecności_ucznia) == 0:
-                raise NonExistingPresencesOfStudentsError("Ten uczeń jeszcze nie ma wpisanych obecności")
+                raise NonExistingPresencesOfStudentsError()
             return lista_obecności_ucznia
         except Exception as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
             return []
 
+#Metody pomocnicze globalne
+#Metoda służąca do wczytywania danych z bazy danych (plików .txt)
 def wczytywanie_z_pliku(nazwa:str):
     try:
         with (open(nazwa, "r", encoding="utf-8") as plik):
@@ -603,9 +675,11 @@ def wczytywanie_z_pliku(nazwa:str):
     except FileNotFoundError:
         print(f"Plik '{nazwa}' nie istnieje.")
 
+#Funkcja usuwająca znaki białe z końca i początku w zmiennej, używana by uniknąć pomyłek użytkownika
 def trymer(zmienna):
     return zmienna.strip()
 
+#Funkcja służąca do przekazywania do okna errorów wszystkich treści błędów, które wystąpią
 def wypisywanie_błędów(treść):
     if error_box:
         error_box.delete("1.0", tk.END)
@@ -643,6 +717,7 @@ opcjeOcLubOb.set("Wybierz opcję")
 options2 = ["Ocena", "Obecnosc"]
 
 entry_fields = []
+#Funkcja odpowiadająca za działanie GUI
 def update_entries(selection):
     for widget in entries_frame.winfo_children():
         widget.destroy()
@@ -932,15 +1007,7 @@ def update_entries(selection):
                 entry_fields.append(entry)
             return
 
-
-
-
-def show_values():
-    print("Wprowadzone wartości:")
-    for i, entry in enumerate(entry_fields):
-        print(f"Pole {i + 1}: {entry.get()}")
-
-
+#Główny dropdown
 selected_option = tk.StringVar(okno_aplikacji)
 selected_option.set("Wybierz opcję")
 options = ["Dodawanie ucznia",
@@ -960,7 +1027,7 @@ dropdown.grid(row=0, column=0, columnspan=10,sticky="new",padx=10,pady=10)
 
 okno_aplikacji.mainloop()
 
-#Zapisywanie zmienionych list obiektów do plików (naszej bazy danych)
+#Zapisywanie zmienionych list obiektów do plików (naszej bazy danych) po zamknięciu okna przez użytkownika
 lista_plików=["Uczniowie.txt", "Grupy.txt","Oceny.txt","Obecności.txt"]
 for i in lista_plików:
     try:

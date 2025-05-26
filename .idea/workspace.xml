@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="wystaw zagrożenia i poprawa zapisu do pliku">
+    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="dodanie wyjątków">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Grupy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Grupy.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +105,7 @@
       <workItem from="1748190589310" duration="956000" />
       <workItem from="1748225006702" duration="9426000" />
       <workItem from="1748241078261" duration="4903000" />
-      <workItem from="1748252591114" duration="21903000" />
+      <workItem from="1748252591114" duration="25380000" />
     </task>
     <task id="LOCAL-00001" summary="Dodałem pliki z przykładowymi danymi i odczyt tych danych">
       <option name="closed" value="true" />
@@ -242,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748272850892</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="dodanie wyjątków">
+      <option name="closed" value="true" />
+      <created>1748274648132</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1748274648132</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,9 +286,10 @@
     <MESSAGE value="zapisywanie do pliku" />
     <MESSAGE value="wystaw zagrożenia" />
     <MESSAGE value="wystaw zagrożenia i poprawa zapisu do pliku" />
-    <option name="LAST_COMMIT_MESSAGE" value="wystaw zagrożenia i poprawa zapisu do pliku" />
+    <MESSAGE value="dodanie wyjątków" />
+    <option name="LAST_COMMIT_MESSAGE" value="dodanie wyjątków" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748274605206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748277973180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

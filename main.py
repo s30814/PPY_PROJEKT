@@ -65,16 +65,18 @@ class Uczeń:
     @staticmethod
     def dodaj_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            nazwisko = entry_fields[1].get()
-            pesel = entry_fields[2].get()
-            grupa = entry_fields[3].get()
-            nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
-            Uczeń.lista_uczniów.append(nowy_uczen)
-            print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
-            for i in Uczeń.lista_uczniów:
-                print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
-                wypisywanie_błędów("")
+            with (open("Uczniowie.txt", "a", encoding="utf-8") as plik):
+                imie = entry_fields[0].get()
+                nazwisko = entry_fields[1].get()
+                pesel = entry_fields[2].get()
+                grupa = entry_fields[3].get()
+                nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
+                Uczeń.lista_uczniów.append(nowy_uczen)
+                print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
+                for i in Uczeń.lista_uczniów:
+                    print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
+                    wypisywanie_błędów("")
+                plik.write("\n"+imie+"\t"+nazwisko+"\t"+pesel+"\t"+grupa+"\n")
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -82,15 +84,18 @@ class Uczeń:
     @staticmethod
     def usuń_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            nazwisko = entry_fields[1].get()
-            pesel = entry_fields[2].get()
-            grupa = entry_fields[3].get()
-            count=0
-            for i in Uczeń.lista_uczniów:
-                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
-                    Uczeń.lista_uczniów.remove(i)
-                    count += 1
+            with (open("Uczniowie.txt", "w", encoding="utf-8") as plik):
+                imie = entry_fields[0].get()
+                nazwisko = entry_fields[1].get()
+                pesel = entry_fields[2].get()
+                grupa = entry_fields[3].get()
+                count=0
+                for i in Uczeń.lista_uczniów:
+                    if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
+                        Uczeń.lista_uczniów.remove(i)
+                        count += 1
+                for i in Uczeń.lista_uczniów:
+                    plik.write(i.imie+"\t"+i.nazwisko+"\t"+i.pesel+"\t"+i.nazwa_grupy+"\n")
             if count == 0:
                 raise ValueError("Nieistnieje taka osoba")
             print(f"Usunięto ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
@@ -197,33 +202,72 @@ class Ocena:
 
     def dodaj_ocene(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            nazwisko = entry_fields[1].get()
-            pesel = entry_fields[2].get()
-            grupa = entry_fields[3].get()
-            count = 0
-            nowy_uczen = None
-            for i in Uczeń.lista_uczniów:
-                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
-                    nowy_uczen=i
-                    count += 1
-            if count == 0:
-                raise ValueError("Nieistnieje taka osoba")
-            opis = entry_fields[4].get()
-            data = entry_fields[5].get()
-            wartość = entry_fields[6].get()
-            for i in Ocena.lista_ocen:
-                if i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel and i.uczeń.nazwa_grupy == grupa and i.opis==opis and i.wartość==wartość:
-                    raise ValueError("Taka ocena już została dodana dla tej osoby")
-            nowa_ocena = Ocena(uczeń=nowy_uczen,opis=opis, data=data,wartość=wartość)
-            Ocena.lista_ocen.append(nowa_ocena)
-            print(f"Dodano ocenę {wartość} z: {opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
-            for i in Ocena.lista_ocen:
-                print(i.uczeń.imie+" "+i.uczeń.nazwisko+" "+i.uczeń.pesel+" "+i.uczeń.nazwa_grupy+" "+i.opis+" "+i.data+" "+str(i.wartość))
-                wypisywanie_błędów("")
+            with (open("Oceny.txt", "a", encoding="utf-8") as plik):
+                imie = entry_fields[0].get()
+                nazwisko = entry_fields[1].get()
+                pesel = entry_fields[2].get()
+                grupa = entry_fields[3].get()
+                count = 0
+                nowy_uczen = None
+                for i in Uczeń.lista_uczniów:
+                    if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
+                        nowy_uczen=i
+                        count += 1
+                if count == 0:
+                    raise ValueError("Nieistnieje taka osoba")
+                opis = entry_fields[4].get()
+                data = entry_fields[5].get()
+                wartość = entry_fields[6].get()
+                for i in Ocena.lista_ocen:
+                    if i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel and i.uczeń.nazwa_grupy == grupa and i.opis==opis and i.wartość==wartość:
+                        raise ValueError("Taka ocena już została dodana dla tej osoby")
+                nowa_ocena = Ocena(uczeń=nowy_uczen,opis=opis, data=data,wartość=wartość)
+                Ocena.lista_ocen.append(nowa_ocena)
+                print(f"Dodano ocenę {wartość} z: {opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
+                for i in Ocena.lista_ocen:
+                    print(i.uczeń.imie+" "+i.uczeń.nazwisko+" "+i.uczeń.pesel+" "+i.uczeń.nazwa_grupy+" "+i.opis+" "+i.data+" "+str(i.wartość))
+                    wypisywanie_błędów("")
+                plik.write("\n"+pesel+"\t"+opis+"\t"+data+"\t"+wartość)
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
+
+    def edytuj_ocene(self_fields):
+        try:
+            with (open("Uczniowie.txt", "w", encoding="utf-8") as plik):
+                imie = entry_fields[0].get()
+                nazwisko = entry_fields[1].get()
+                pesel = entry_fields[2].get()
+
+                nowy_uczen = None
+                for i in Uczeń.lista_uczniów:
+                    if i.pesel == pesel:
+                        nowy_uczen = i
+
+                data = entry_fields[3].get()
+                wartosc_oceny = entry_fields[4].get()
+                opis_oceny = entry_fields[5].get()
+                nowa_wartosc = entry_fields[6].get()
+                nowy_opis = entry_fields[7].get()
+                for i in Ocena.lista_ocen:
+                    if (i.uczeń.pesel == pesel and i.wartość == wartosc_oceny and i.opis == opis_oceny and i.data == data):
+                        Ocena.lista_ocen.remove(i)
+                nowa_ocena = Ocena(nowy_uczen, nowy_opis, data, nowa_wartosc)
+                Ocena.lista_ocen.append(nowa_ocena)
+
+                print(
+                f"Dodano ocenę {nowa_wartosc} z: {nowy_opis} , dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}")
+                for i in Ocena.lista_ocen:
+                    print(
+                    i.uczeń.imie + " " + i.uczeń.nazwisko + " " + i.uczeń.pesel + " " + i.uczeń.nazwa_grupy + " " + i.opis + " " + i.data + " " + str(
+                        i.wartość))
+                    wypisywanie_błędów("")
+                for i in Ocena.lista_ocen:
+                    plik.write(i.uczeń.pesel+"\t"+i.opis+"\t"+i.data+"\t"+i.wartość+"\n")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+
 
 
 class Obecność:
@@ -256,6 +300,65 @@ class Obecność:
     @status.setter
     def status(self, nowy_status):
         self._status = nowy_status
+
+    def sprawdzanie_obecnosci(entry_fields):
+        try:
+            with (open("Obecności.txt", "a", encoding="utf-8") as plik):
+                grupa = entry_fields[0].get()
+                imie = entry_fields[1].get()
+                nazwisko = entry_fields[2].get()
+                pesel = entry_fields[3].get()
+                data = entry_fields[4].get()
+                obecnosc= entry_fields[5].get()
+
+                nowy_uczen= None
+                for i in Uczeń.lista_uczniów:
+                    if(i.pesel==pesel):
+                        nowy_uczen=i
+                nowa_obecnosc= Obecność(nowy_uczen, data, obecnosc)
+                Obecność.lista_obecności.append(nowa_obecnosc)
+                print(f"Dodano obecnosc: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa},Data: {data} Obecnosc {obecnosc}")
+                for i in Obecność.lista_obecności:
+                    print(i.uczeń.imie +" "+i.uczeń.nazwisko+" "+i.uczeń.nazwa_grupy+" "+i.status)
+                    wypisywanie_błędów("")
+                plik.write("\n" +  pesel + "\t" + data + "\t"+ obecnosc +"\n")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+
+    def edytuj_obecnosc(self_fields):
+        try:
+            with (open("Obecności.txt", "w", encoding="utf-8") as plik):
+                imie = entry_fields[0].get()
+                nazwisko = entry_fields[1].get()
+                pesel = entry_fields[2].get()
+
+                nowy_uczen = None
+                for i in Uczeń.lista_uczniów:
+                    if i.pesel == pesel:
+                        nowy_uczen = i
+
+                data = entry_fields[3].get()
+                obecnosc = entry_fields[4].get()
+                nowa_obecnosc = entry_fields[5].get()
+                for i in Obecność.lista_obecności:
+                    if (i.uczeń.pesel == pesel and i.status== obecnosc and i.data == data):
+                        Obecność.lista_obecności.remove(i)
+                nowa_obecnosc2= Obecność(nowy_uczen, data, nowa_obecnosc)
+                Obecność.lista_obecności.append(nowa_obecnosc2)
+
+                print(
+                f"Dodano obecnosc {nowa_obecnosc}, dnia: {data}. Uczniowi: {imie} {nazwisko}, PESEL: {pesel}")
+                for i in Obecność.lista_obecności:
+                    print(
+                    i.uczeń.imie + " " + i.uczeń.nazwisko + " " + i.uczeń.pesel + " " + i.uczeń.nazwa_grupy + " " + i.data+ " " + i.status)
+                    wypisywanie_błędów("")
+                for i in Obecność.lista_obecności:
+                    plik.write(i.uczeń.pesel+"\t"+i.data+"\t"+i.status+"\n")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+
 
 def wczytywanie_z_pliku(nazwa:str):
     try:
@@ -381,13 +484,28 @@ def update_entries(selection):
         #edytowanie ucznia
 
         case "Sprawdzanie obecności":
-            labels = ["Grupa", "Uczeń","Stan obecności"]
-            for i in range(3):
+            labels = ["Grupa", "Imie", "Nazwisko", "Pesel", "Data", "Stan obecności"]
+            for i in range(len(labels)):
                 label = tk.Label(entries_frame, text=labels[i])
                 label.grid(row=2 + i, column=1, padx=7, pady=10, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
+
+            save_button = tk.Button(entries_frame, text="Dodaj obecnosc", command=lambda: Obecność.sprawdzanie_obecnosci(entry_fields))
+            save_button.grid(row=2 + len(labels), column=2, pady=10)
+
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista uczniów")
+            label.grid(row=2, column=3, padx=5, pady=5, sticky="ew")
+            for i in Obecność.lista_obecności:
+                listbox.insert(tk.END, i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.nazwa_grupy+"   " +" "+i.data+" "+ i.status)
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=5, sticky="nsew")
             return
         case "Wystawianie oceny":
             labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy","Tytuł oceny","Data","Ocena"]
@@ -413,28 +531,66 @@ def update_entries(selection):
                 listbox.insert(tk.END, i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(i.wartość))
             listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
-        case "Edycja oceny/obecności danego dnia":
-            for i in range(2):
+        case "Edycja oceny danego dnia":
+            labels=["imie", "nazwisko", "pesel", "data", "Wartosc oceny", "Opis oceny", "Nowa wartość", "Nowy opis"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
+                entry.grid(row=2 + i, column=2, padx=5, pady=5)
                 entry_fields.append(entry)
-            dropdown = tk.OptionMenu(entries_frame, opcjeOcLubOb, *options2, command=update_ocenaLubObecnosc)
-            dropdown.grid(row=4, column=2, padx=7,pady=10)
-            entry = tk.Entry(entries_frame, width=15)
-            entry.grid(row=5, column=2, padx=7, pady=10)
-            entry_fields.append(entry)
+
+            save_button = tk.Button(entries_frame, text="Edytuj ocene", command=lambda: Ocena.edytuj_ocene(entry_fields))
+            save_button.grid(row=2 + len(labels), column=3, pady=0)
+
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista ocen")
+            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
+            for i in Ocena.lista_ocen:
+                listbox.insert(tk.END,
+                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(
+                                   i.wartość))
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
-        case "Wyświetlenie oceny/obecności danego ucznia":
+        case "Edycja obecności danego dnia":
+            labels = ["Imie", "Nazwisko", "pesel", "Data", "Obecnosc",  "Nowa obecnosc"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
+                entry = tk.Entry(entries_frame, width=15)
+                entry.grid(row=2 + i, column=2, padx=5, pady=5)
+                entry_fields.append(entry)
+
+            save_button = tk.Button(entries_frame, text="Edytuj ocene",
+                                    command=lambda: Ocena.edytuj_ocene(entry_fields))
+            save_button.grid(row=2 + len(labels), column=3, pady=0)
+
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista ocen")
+            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
+            for i in Ocena.lista_ocen:
+                listbox.insert(tk.END,
+                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(
+                                   i.wartość))
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
+            return
+        case "Wyświetlenie oceny danego ucznia":
             for i in range(3):
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
             return
-        case "Wystawianie zagrożenia":
-            for i in range(2):
-                entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
-                entry_fields.append(entry)
+        case "Wyświetlenie obecności danego ucznia":
             return
         case "Wyświetl średnią ucznia":
             for i in range(2):
@@ -469,9 +625,10 @@ options = ["Dodawanie ucznia",
            "Usuwanie ucznia",
            "Sprawdzanie obecności",
            "Wystawianie oceny",
-           "Edycja oceny/obecności danego dnia",
-           "Wyświetlenie oceny/obecności danego ucznia",
-           "Wystawianie zagrożenia",
+           "Edycja oceny danego dnia",
+           "Edycja obecności danego dnia",
+           "Wyświetlenie oceny danego ucznia",
+           "Wyświetlenie obecności danego ucznia",
            "Wyświetl średnią ucznia",
            "Wygeneruj raport z ocen i obecności uczniów",
            "Generowanie statystyk"]

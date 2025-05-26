@@ -612,57 +612,67 @@ def update_entries(selection):
                 listbox.insert(tk.END, i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(i.wartość))
             listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
-        case "Edycja oceny danego dnia":
-            labels=["Imię", "Nazwisko", "Pesel", "Data", "Wartość oceny", "Opis oceny", "Nowa wartość", "Nowy opis"]
-            for i in range(len(labels)):
-                label = tk.Label(entries_frame, text=labels[i])
-                label.grid(row=2 + i, column=1, padx=5, pady=3, sticky="e")
-                entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2 + i, column=2, padx=5, pady=3)
-                entry_fields.append(entry)
+        case "Edycja oceny/obecności danego dnia":
+            option_var = tk.StringVar(value="ocena")
 
-            save_button = tk.Button(entries_frame, text="Edytuj ocenę", command=lambda: Ocena.edytuj_ocene(entry_fields))
-            save_button.grid(row=2 + len(labels), column=3, pady=0)
+            def zmiana_opcji():
+                #Czyszcze stare pola i widgety
+                for widget in entries_frame.winfo_children():
+                    widget.destroy()
+                entry_fields.clear()
 
-            entries_frame.grid_columnconfigure(0, weight=0)
-            entries_frame.grid_columnconfigure(1, weight=0)
-            entries_frame.grid_columnconfigure(2, weight=0)
-            entries_frame.grid_columnconfigure(3, weight=1)
+                #Dodaje RadioButtony
+                tk.Label(entries_frame, text="Wybierz tryb edycji:").grid(row=0, column=0, pady=3, sticky="w")
+                tk.Radiobutton(entries_frame, text="Edycja oceny", variable=option_var, value="ocena", command=zmiana_opcji).grid(row=0, column=1, sticky="w")
+                tk.Radiobutton(entries_frame, text="Edycja obecności", variable=option_var, value="obecnosc", command=zmiana_opcji).grid(row=0, column=2, sticky="w")
 
-            listbox = tk.Listbox(entries_frame)
-            label = tk.Label(entries_frame, text="Lista ocen")
-            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
-            for i in Ocena.lista_ocen:
-                listbox.insert(tk.END,
-                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(
-                                   i.wartość))
-            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
-            return
-        case "Edycja obecności danego dnia":
-            labels = ["Imię", "Nazwisko", "Pesel", "Data", "Obecność",  "Nowa obecność"]
-            for i in range(len(labels)):
-                label = tk.Label(entries_frame, text=labels[i])
-                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
-                entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2 + i, column=2, padx=5, pady=5)
-                entry_fields.append(entry)
+                #Pola formularza + przycisk zapisu w zależności od wybranej opcji
+                if option_var.get() == "ocena":
+                    labels = ["Imię", "Nazwisko", "Pesel", "Data", "Wartość oceny", "Opis oceny", "Nowa wartość", "Nowy opis"]
+                    for i in range(len(labels)):
+                        label = tk.Label(entries_frame, text=labels[i])
+                        label.grid(row=2 + i, column=1, padx=5, pady=3, sticky="e")
+                        entry = tk.Entry(entries_frame, width=15)
+                        entry.grid(row=2 + i, column=2, padx=5, pady=3)
+                        entry_fields.append(entry)
 
-            save_button = tk.Button(entries_frame, text="Edytuj obecność",
-                                    command=lambda: Obecność.edytuj_obecnosc(entry_fields))
-            save_button.grid(row=2 + len(labels), column=3, pady=0)
+                    save_button = tk.Button(entries_frame, text="Edytuj ocenę", command=lambda: Ocena.edytuj_ocene(entry_fields))
+                    save_button.grid(row=2 + len(labels), column=2, pady=5)
 
-            entries_frame.grid_columnconfigure(0, weight=0)
-            entries_frame.grid_columnconfigure(1, weight=0)
-            entries_frame.grid_columnconfigure(2, weight=0)
-            entries_frame.grid_columnconfigure(3, weight=1)
+                    # Lista ocen
+                    label = tk.Label(entries_frame, text="Lista ocen")
+                    label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
 
-            listbox = tk.Listbox(entries_frame)
-            label = tk.Label(entries_frame, text="Lista obecności")
-            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
-            for i in Obecność.lista_obecności:
-                listbox.insert(tk.END,
-                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.data + "   " + i.status)
-            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
+                    listbox = tk.Listbox(entries_frame)
+                    for i in Ocena.lista_ocen:
+                        listbox.insert(tk.END,f"{i.uczeń.imie}   {i.uczeń.nazwisko}   {i.uczeń.pesel}   {i.uczeń.nazwa_grupy}   {i.opis}   {i.data}   {i.wartość}")
+                    listbox.grid(row=3, column=3, rowspan=10, padx=5, pady=3, sticky="nsew")
+
+                else:
+                    labels = ["Imię", "Nazwisko", "Pesel", "Data", "Obecność", "Nowa obecność"]
+                    for i in range(len(labels)):
+                        label = tk.Label(entries_frame, text=labels[i])
+                        label.grid(row=2 + i, column=1, padx=5, pady=3, sticky="e")
+                        entry = tk.Entry(entries_frame, width=15)
+                        entry.grid(row=2 + i, column=2, padx=5, pady=3)
+                        entry_fields.append(entry)
+
+                    save_button = tk.Button(entries_frame, text="Edytuj obecność", command=lambda: Obecność.edytuj_obecnosc(entry_fields))
+                    save_button.grid(row=2 + len(labels), column=2, pady=5)
+
+                    # Lista obecności
+                    label = tk.Label(entries_frame, text="Lista obecności")
+                    label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
+
+                    listbox = tk.Listbox(entries_frame)
+                    for i in Obecność.lista_obecności:
+                        listbox.insert(tk.END,f"{i.uczeń.imie}   {i.uczeń.nazwisko}   {i.uczeń.pesel}   {i.uczeń.nazwa_grupy}   {i.data}   {i.status}")
+                    listbox.grid(row=3, column=3, rowspan=10, padx=5, pady=3, sticky="nsew")
+                entries_frame.grid_columnconfigure(0, weight=0)
+                entries_frame.grid_columnconfigure(1, weight=0)
+                entries_frame.grid_columnconfigure(2, weight=0)
+                entries_frame.grid_columnconfigure(3, weight=1)
+            zmiana_opcji()
             return
         case "Wyświetlenie oceny danego ucznia":
             for i in range(3):
@@ -727,8 +737,7 @@ options = ["Dodawanie ucznia",
            "Edycja ucznia",
            "Sprawdzanie obecności",
            "Wystawianie oceny",
-           "Edycja oceny danego dnia",
-           "Edycja obecności danego dnia",
+           "Edycja oceny/obecności danego dnia",
            "Wyświetlenie oceny danego ucznia",
            "Wyświetlenie obecności danego ucznia",
            "Wyświetl średnią ucznia",

@@ -111,6 +111,12 @@ class Uczeń:
                     for j in Grupa.lista_grup:
                         if j.nazwa == grupa:
                             Grupa.lista_grup.remove(j)
+                    for j in Ocena.lista_ocen:
+                        if j.uczeń.pesel == pesel:
+                            Ocena.lista_ocen.remove(j)
+                    for j in Obecność.lista_obecności:
+                        if j.uczeń.pesel == pesel:
+                            Obecność.lista_obecności.remove(j)
                     count += 1
                     break
             if count == 0:

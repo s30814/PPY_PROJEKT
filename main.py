@@ -556,13 +556,11 @@ class Ocena:
         raport.to_excel("Raport.xlsx")
 
     #metoda generowania statystyk oraz wizualizacja ich za pomoca wykresow
-    @staticmethod
-    def statystyki_wizualizacja():
+    def statystyki_wizualizacja(entry_fields):
         #wykres słupkowy ze srednimi ocenami uczniow
         uczen_srednia={}
         for i in Uczeń.lista_uczniów:
             uczen_srednia[i.imie+" "+i.nazwisko+" "+ i.pesel]=i.oblicz_średnią()
-            print(i.oblicz_średnią())
 
         uczniowie = list(uczen_srednia.keys())
         srednie_oceny = list(uczen_srednia.values())
@@ -576,8 +574,23 @@ class Ocena:
         plt.tight_layout()
         plt.show()
         #wykres kolowy statusu obecnosci wskazanego ucznia
+        pesel=trymer(entry_fields[0].get())
+        statusy = {}
+        for i in Obecność.lista_obecności:
+            if i.status not in statusy:
+                statusy[i.status] = 0
 
+        for i in Obecność.lista_obecności:
+            if i.uczeń.pesel == pesel:
+                statusy[i.status] += 1
 
+        statusy2 = list(statusy.keys())
+        ilosc = list(statusy.values())
+
+        plt.pie(ilosc, labels=statusy2, autopct='%1.1f%%')
+        plt.title("Statusy obecnosci podanego ucznia")
+        plt.axis('equal')
+        plt.show()
         #wykres ocen wskazanej klasy
 
 #Klasa reprezentująca obiekty obecności uczniów, jest urzeczywistnieniem Obecności z bazy danych
@@ -1102,8 +1115,16 @@ def update_entries(selection):
             save_button.grid(row=2, column=1, pady=5)
             return
         case "Generowanie statystyk":
-            save_button = tk.Button(entries_frame, text="Pokaz wizualizacje", command=lambda: Ocena.statystyki_wizualizacja())
-            save_button.grid(row=2, column=1, pady=5)
+            labels= ["Pesel", "Grupa"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=0, padx=5, pady=5, sticky="e")
+                entry = tk.Entry(entries_frame, width=15)
+                entry.grid(row=2 + i, column=1, padx=7, pady=10)
+                entry_fields.append(entry)
+
+            save_button = tk.Button(entries_frame, text="Pokaz wizualizacje", command=lambda: Ocena.statystyki_wizualizacja(entry_fields))
+            save_button.grid(row=2+len(labels), column=1, pady=5)
             return
 
 #Główny dropdown

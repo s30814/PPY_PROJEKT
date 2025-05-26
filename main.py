@@ -1,7 +1,6 @@
 import tkinter as tk
 from datetime import datetime
 
-
 class Uczeń:
     lista_uczniów = []
     def __init__(self, imie:str, nazwisko:str, pesel:str, nazwa_grupy:str):
@@ -72,6 +71,15 @@ class Uczeń:
             grupa = trymer(entry_fields[3].get())
             nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
             Uczeń.lista_uczniów.append(nowy_uczen)
+            count=0
+            for i in Grupa.lista_grup:
+                if i.nazwa == grupa:
+                    count += 1
+            if count == 0:
+                Grupa.lista_grup.append(Grupa(grupa, []))
+            for i in Grupa.lista_grup:
+                if i.nazwa == grupa:
+                    i.uczniowie.append(nowy_uczen)
             print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
             for i in Uczeń.lista_uczniów:
                 print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
@@ -91,12 +99,14 @@ class Uczeń:
             for i in Uczeń.lista_uczniów:
                 if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
                     Uczeń.lista_uczniów.remove(i)
+                    for j in Grupa.lista_grup:
+                        if j.nazwa == grupa:
+                            Grupa.lista_grup.remove(j)
                     count += 1
                     break
             if count == 0:
                 raise ValueError("Nie istnieje taka osoba")
             print(f"Usunięto ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
-            Grupa.czyszczenie_grup()
             for i in Uczeń.lista_uczniów:
                 print(i.imie + " " + i.nazwisko + " " + i.pesel + " " + i.nazwa_grupy)
                 wypisywanie_błędów("")
@@ -190,7 +200,6 @@ class Grupa:
         for i in Grupa.lista_grup:
             if len(i.uczniowie) == 0:
                 Grupa.lista_grup.remove(i)
-
 class Ocena:
     lista_ocen = []
     def __init__(self, uczeń:Uczeń, opis:str, data:str, wartość:str):
@@ -860,5 +869,24 @@ options = ["Dodawanie ucznia",
 dropdown = tk.OptionMenu(okno_aplikacji, selected_option, *options, command=update_entries)
 dropdown.grid(row=0, column=0, columnspan=10,sticky="new",padx=10,pady=10)
 
-
 okno_aplikacji.mainloop()
+
+#Zapisywanie zmienionych list obiektów do plików (naszej bazy danych)
+lista_plików=["Uczniowie.txt", "Grupy.txt","Oceny.txt","Obecności.txt"]
+for i in lista_plików:
+    try:
+        with open(i, "w", encoding="utf-8") as plik:
+            if i == "Uczniowie.txt":
+                for uczen in Uczeń.lista_uczniów:
+                    plik.write(f"{uczen.imie}\t{uczen.nazwisko}\t{uczen.pesel}\t{uczen.nazwa_grupy}\n")
+            elif i == "Grupy.txt":
+                for grupa in Grupa.lista_grup:
+                    plik.write(f"{grupa.nazwa}\n")
+            elif i == "Oceny.txt":
+                for ocena in Ocena.lista_ocen:
+                    plik.write(f"{ocena.uczeń.pesel}\t{ocena.opis}\t{ocena.data}\t{ocena.wartość}\n")
+            elif i == "Obecności.txt":
+                for obec in Obecność.lista_obecności:
+                    plik.write(f"{obec.uczeń.pesel}\t{obec.data}\t{obec.status}\n")
+    except Exception as e:
+        print(e)

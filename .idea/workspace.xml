@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="naprawa wczytywania danych i poprawa oblicz srednia">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Obecności.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Obecności.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="2 wykres" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +102,7 @@
       <workItem from="1748225006702" duration="9426000" />
       <workItem from="1748241078261" duration="4903000" />
       <workItem from="1748252591114" duration="25380000" />
-      <workItem from="1748278820390" duration="14140000" />
+      <workItem from="1748278820390" duration="14440000" />
     </task>
     <task id="LOCAL-00001" summary="Dodałem pliki z przykładowymi danymi i odczyt tych danych">
       <option name="closed" value="true" />
@@ -268,7 +264,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748291449378</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="2 wykres">
+      <option name="closed" value="true" />
+      <created>1748293923859</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1748293923859</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -306,9 +310,10 @@
     <MESSAGE value="dodanie wyjątków" />
     <MESSAGE value="edytowanie ucznia, raporty" />
     <MESSAGE value="naprawa wczytywania danych i poprawa oblicz srednia" />
-    <option name="LAST_COMMIT_MESSAGE" value="naprawa wczytywania danych i poprawa oblicz srednia" />
+    <MESSAGE value="2 wykres" />
+    <option name="LAST_COMMIT_MESSAGE" value="2 wykres" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748293695930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748294113282" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

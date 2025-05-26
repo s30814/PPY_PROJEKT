@@ -280,7 +280,7 @@ class Uczeń:
             pesel = trymer(entry_fields[2].get())
             for i in Uczeń.lista_uczniów:
                 if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel:
-                    return i.oblicz_średnią()
+                    return round(i.oblicz_średnią(),2)
             raise NonExistingPersonError()
         except Exception as e:
             wypisywanie_błędów(e)

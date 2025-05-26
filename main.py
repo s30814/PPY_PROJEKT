@@ -613,7 +613,7 @@ selected_option = tk.StringVar(okno_aplikacji)
 selected_option.set("Wybierz opcję")
 options = ["Dodawanie ucznia",
            "Usuwanie ucznia",
-           "Edycja ucznia"
+           "Edycja ucznia",
            "Sprawdzanie obecności",
            "Wystawianie oceny",
            "Edycja oceny danego dnia",

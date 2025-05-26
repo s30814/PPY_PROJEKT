@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="dodanie wyjątków">
+      <change beforePath="$PROJECT_DIR$/.idea/ProjektPPY.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ProjektPPY.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grupy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Grupy.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oceny.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Oceny.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Uczniowie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Uczniowie.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +29,7 @@
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/s30814/PPY_PROJEKT.git",
-    "accountId": "011f40c8-bb36-491f-8207-94019e759ebe"
+    "accountId": "a8d54627-2de9-4176-b6ea-ba1eb6c2f78c"
   }
 }]]></component>
   <component name="ProjectColorInfo">{
@@ -81,8 +84,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.25659.43" />
-        <option value="bundled-python-sdk-181015f7ab06-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.25659.43" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-PY-251.23774.444" />
+        <option value="bundled-python-sdk-890ed5b35930-d9c5bdb153f4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.23774.444" />
       </set>
     </attachedChunks>
   </component>
@@ -106,6 +109,7 @@
       <workItem from="1748225006702" duration="9426000" />
       <workItem from="1748241078261" duration="4903000" />
       <workItem from="1748252591114" duration="25380000" />
+      <workItem from="1748278820390" duration="11253000" />
     </task>
     <task id="LOCAL-00001" summary="Dodałem pliki z przykładowymi danymi i odczyt tych danych">
       <option name="closed" value="true" />
@@ -290,6 +294,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="dodanie wyjątków" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748277973180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748290865407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

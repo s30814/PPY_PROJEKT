@@ -1,5 +1,7 @@
 import tkinter as tk
 from datetime import datetime
+import pandas as pd
+import matplotlib.pyplot as plt
 
 #Wyjątki
 #1. Wyjątek zwracany gdy użytkownik poda niepoprawny pesel
@@ -230,6 +232,40 @@ class Uczeń:
             for i in Uczeń.lista_uczniów:
                 print(i.imie + " " + i.nazwisko + " " + i.pesel + " " + i.nazwa_grupy)
                 wypisywanie_błędów("")
+        except Exception as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+
+    #Funkcja edytujaca dane wybranego ucznia
+    @staticmethod
+    def edytuj_ucznia(entry_fields):
+        try:
+            pesel= trymer(entry_fields[0].get())
+            nowe_imie= trymer(entry_fields[1].get())
+            nowe_nazwisko= trymer(entry_fields[2].get())
+            nowa_grupa=trymer(entry_fields[3].get())
+            nowy_pesel=trymer(entry_fields[4].get())
+            count=0
+
+            for i in Uczeń.lista_uczniów:
+                if i.pesel==pesel:
+                    count += 1
+                    Uczeń.lista_uczniów.remove(i)
+
+            if count == 0:
+                raise NonExistingPersonError()
+
+            count=0
+
+            nowy_uczen= Uczeń(nowe_imie, nowe_nazwisko, nowy_pesel, nowa_grupa)
+            Uczeń.lista_uczniów.append(nowy_uczen)
+
+            print(f"Edytowane dane ucznia, nowe dane {nowe_imie}, {nowe_nazwisko}, {nowy_pesel}, {nowa_grupa}")
+
+            for i in Uczeń.lista_uczniów:
+                print(i.imie+" "+i.nazwisko+" "+i.pesel+" "+i.nazwa_grupy)
+                wypisywanie_błędów("")
+
         except Exception as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
@@ -498,6 +534,50 @@ class Ocena:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
             return []
+
+    #metoda generująca raport
+    @staticmethod
+    def generowanie_raportu():
+        lista_slownikow_ocen= []
+        for i in Ocena.lista_ocen:
+            ocena_slownik = {'uczen': i.uczeń.pesel, 'opis': i.opis, 'data': i.data, 'wartosc': i.wartość}
+            lista_slownikow_ocen.append(ocena_slownik)
+
+        lista_slownikow_obecnosci=[]
+        for i in Obecność.lista_obecności:
+            obecnosc_slownik=  {'uczen': i.uczeń.pesel, 'data': i.data, 'status': i.status}
+            lista_slownikow_obecnosci.append(obecnosc_slownik)
+
+        df_oceny = pd.DataFrame(lista_slownikow_ocen)
+        df_obecnosci = pd.DataFrame(lista_slownikow_obecnosci)
+
+        raport = pd.merge(df_oceny, df_obecnosci, on=['uczen', 'data'], how='outer')
+
+        raport.to_excel("Raport.xlsx")
+
+    #metoda generowania statystyk oraz wizualizacja ich za pomoca wykresow
+    @staticmethod
+    def statystyki_wizualizacja():
+        #wykres słupkowy ze srednimi ocenami uczniow
+        uczen_srednia={}
+        for i in Uczeń.lista_uczniów:
+            uczen_srednia[f"{i.imie} {i.nazwisko} {i.pesel}"]=i.oblicz_średnią()
+
+        uczniowie = list(uczen_srednia.keys())
+        srednie_oceny = list(uczen_srednia.values())
+
+        plt.bar(uczniowie, srednie_oceny, color='red')
+        plt.xlabel("Uczniowie")
+        plt.ylabel("Średnia ocen")
+        plt.title("Wykres średnich ocen uczniów")
+        plt.ylim(0,6)
+        plt.xticks(rotation=90, ha="center")
+        plt.tight_layout()
+        plt.show()
+        #wykres kolowy statusu obecnosci wskazanego ucznia
+
+
+        #wykres ocen wskazanej klasy
 
 #Klasa reprezentująca obiekty obecności uczniów, jest urzeczywistnieniem Obecności z bazy danych
 class Obecność:
@@ -770,8 +850,29 @@ def update_entries(selection):
                 listbox.insert(tk.END, i.imie + "   " + i.nazwisko + "   " + i.pesel + "   " + i.nazwa_grupy)
             listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=5, sticky="nsew")
             return
-        #edytowanie ucznia
+        case "Edycja ucznia":
+            labels= ["Pesel", "Nowe imię", "Nowe nazwisko", "Nowa nazwa grupy", "Nowy pesel"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=7, pady=10, sticky="e")
+                entry = tk.Entry(entries_frame, width=15)
+                entry.grid(row=2 + i, column=2, padx=7, pady=10)
+                entry_fields.append(entry)
+            save_button = tk.Button(entries_frame, text="Edytuj ucznia", command=lambda: Uczeń.edytuj_ucznia(entry_fields))
 
+            save_button.grid(row=2 + len(labels), column=2, pady=10)
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista uczniów")
+            label.grid(row=2, column=3, padx=5, pady=5, sticky="ew")
+            for i in Uczeń.lista_uczniów:
+                listbox.insert(tk.END, i.imie + "   " + i.nazwisko + "   " + i.pesel + "   " + i.nazwa_grupy)
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=5, sticky="nsew")
+            return
         case "Sprawdzanie obecności":
             labels = ["Grupa", "Imie", "Nazwisko", "Pesel", "Data", "Stan obecności"]
             for i in range(len(labels)):
@@ -996,15 +1097,12 @@ def update_entries(selection):
             entries_frame.grid_columnconfigure(2, weight=1)
             return
         case "Wygeneruj raport z ocen i obecności uczniów":
-            entry = tk.Entry(entries_frame, width=15)
-            entry.grid(row=2, column=2, padx=7, pady=10)
-            entry_fields.append(entry)
+            save_button = tk.Button(entries_frame, text="Wygeneruj raport", command=lambda: Ocena.generowanie_raportu())
+            save_button.grid(row=2, column=1, pady=5)
             return
         case "Generowanie statystyk":
-            for i in range(2):
-                entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
-                entry_fields.append(entry)
+            save_button = tk.Button(entries_frame, text="Pokaz wizualizacje", command=lambda: Ocena.statystyki_wizualizacja())
+            save_button.grid(row=2, column=1, pady=5)
             return
 
 #Główny dropdown

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="zapisywanie do pliku">
+    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="wystaw zagrożenia i poprawa zapisu do pliku">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -104,7 +104,7 @@
       <workItem from="1748190589310" duration="956000" />
       <workItem from="1748225006702" duration="9426000" />
       <workItem from="1748241078261" duration="4903000" />
-      <workItem from="1748252591114" duration="19919000" />
+      <workItem from="1748252591114" duration="21903000" />
     </task>
     <task id="LOCAL-00001" summary="Dodałem pliki z przykładowymi danymi i odczyt tych danych">
       <option name="closed" value="true" />
@@ -226,7 +226,23 @@
       <option name="project" value="LOCAL" />
       <updated>1748271793205</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="wystaw zagrożenia">
+      <option name="closed" value="true" />
+      <created>1748272731810</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1748272731810</updated>
+    </task>
+    <task id="LOCAL-00017" summary="wystaw zagrożenia i poprawa zapisu do pliku">
+      <option name="closed" value="true" />
+      <created>1748272850892</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1748272850892</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -259,9 +275,11 @@
     <MESSAGE value="wyświetlanie średniej" />
     <MESSAGE value="czy zagrożony" />
     <MESSAGE value="zapisywanie do pliku" />
-    <option name="LAST_COMMIT_MESSAGE" value="zapisywanie do pliku" />
+    <MESSAGE value="wystaw zagrożenia" />
+    <MESSAGE value="wystaw zagrożenia i poprawa zapisu do pliku" />
+    <option name="LAST_COMMIT_MESSAGE" value="wystaw zagrożenia i poprawa zapisu do pliku" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748272607420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748274605206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -66,14 +66,10 @@ class Uczeń:
     @staticmethod
     def dodaj_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
-            grupa = entry_fields[3].get()
-            trymer(grupa)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
+            grupa = trymer(entry_fields[3].get())
             nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
             Uczeń.lista_uczniów.append(nowy_uczen)
             print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
@@ -87,14 +83,10 @@ class Uczeń:
     @staticmethod
     def usuń_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
-            grupa = entry_fields[3].get()
-            trymer(grupa)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
+            grupa = trymer(entry_fields[3].get())
             count=0
             for i in Uczeń.lista_uczniów:
                 if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
@@ -115,12 +107,9 @@ class Uczeń:
     @staticmethod
     def wyświetl_średnią_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
             for i in Uczeń.lista_uczniów:
                 if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel:
                     return i.oblicz_średnią()
@@ -135,17 +124,12 @@ class Uczeń:
         liczba_nb=0
         liczba_sp=0
         uczen=None
-        imie=entry_fields[0]
-        trymer(imie)
-        nazwisko=entry_fields[1]
-        trymer(nazwisko)
-        pesel = entry_fields[2]
-        trymer(pesel)
-        grupa = entry_fields[3]
-        trymer(grupa)
+        imie=trymer(entry_fields[0].get())
+        nazwisko=trymer(entry_fields[1].get())
+        pesel = trymer(entry_fields[2].get())
         count=0
         for i in Obecność.lista_obecności:
-            if i.uczeń.pesel == pesel and i.uczeń.nazwa_grupy == grupa and i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko:
+            if i.uczeń.pesel == pesel and i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko:
                 count+=1
                 uczen=i.uczeń
                 liczba_lekcji += 1
@@ -154,17 +138,27 @@ class Uczeń:
                 elif i.status.lower() == "spóźniony":
                     liczba_sp+=1
         try:
+            odp=[]
+            odp.append("Liczba lekcji: "+str(liczba_lekcji))
+            odp.append("Liczba nieobecności: "+str(liczba_nb))
+            odp.append("Liczba spóźnień: "+str(liczba_sp))
+            odp.append("")
             if count==0:
                 raise ValueError("Nie istnieje taka osoba")
             elif liczba_nb > 2:
-                raise ValueError("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności")
-            elif float(liczba_sp) >= float(liczba_sp)/2:
-                raise ValueError("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji")
+                odp.append("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności.")
+            elif float(liczba_sp) >= float(liczba_lekcji)/2:
+                odp.append("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji.")
             elif uczen.oblicz_średnią()<3.0:
-                raise ValueError("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0")
+                odp.append("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0.")
+            else:
+                odp.append("Uczeń nie jest zagrożony")
+            wypisywanie_błędów("")
+            return odp
         except ValueError as e:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
+            return []
 
 class Grupa:
     lista_grup = []
@@ -254,14 +248,10 @@ class Ocena:
     @staticmethod
     def dodaj_ocene(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
-            grupa = entry_fields[3].get()
-            trymer(grupa)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
+            grupa = trymer(entry_fields[3].get())
             count = 0
             nowy_uczen = None
             for i in Uczeń.lista_uczniów:
@@ -290,22 +280,14 @@ class Ocena:
     @staticmethod
     def edytuj_ocene(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
-            data = entry_fields[3].get()
-            trymer(data)
-            wartosc_oceny = entry_fields[4].get()
-            trymer(wartosc_oceny)
-            opis_oceny = entry_fields[5].get()
-            trymer(opis_oceny)
-            nowa_wartosc = entry_fields[6].get()
-            trymer(nowa_wartosc)
-            nowy_opis = entry_fields[7].get()
-            trymer(nowy_opis)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
+            data = trymer(entry_fields[3].get())
+            wartosc_oceny = trymer(entry_fields[4].get())
+            opis_oceny = trymer(entry_fields[5].get())
+            nowa_wartosc = trymer(entry_fields[6].get())
+            nowy_opis = trymer(entry_fields[7].get())
             count=0
             nowy_uczen = None
             for i in Uczeń.lista_uczniów:
@@ -336,12 +318,9 @@ class Ocena:
     @staticmethod
     def wyświetl_oceny_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
             count = 0
             lista_ocen_ucznia=[]
             for i in Uczeń.lista_uczniów:
@@ -408,18 +387,12 @@ class Obecność:
     @staticmethod
     def sprawdzanie_obecnosci(entry_fields):
         try:
-            grupa = entry_fields[0].get()
-            trymer(grupa)
-            imie = entry_fields[1].get()
-            trymer(imie)
-            nazwisko = entry_fields[2].get()
-            trymer(nazwisko)
-            pesel = entry_fields[3].get()
-            trymer(pesel)
-            data = entry_fields[4].get()
-            trymer(data)
-            status= entry_fields[5].get()
-            trymer(status)
+            grupa = trymer(entry_fields[0].get())
+            imie = trymer(entry_fields[1].get())
+            nazwisko = trymer(entry_fields[2].get())
+            pesel = trymer(entry_fields[3].get())
+            data = trymer(entry_fields[4].get())
+            status= trymer(entry_fields[5].get())
             count = 0
             nowy_uczen = None
             for i in Uczeń.lista_uczniów:
@@ -445,18 +418,12 @@ class Obecność:
     @staticmethod
     def edytuj_obecnosc(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
-            data = entry_fields[3].get()
-            trymer(data)
-            obecnosc = entry_fields[4].get()
-            trymer(obecnosc)
-            nowa_obecnosc = entry_fields[5].get()
-            trymer(nowa_obecnosc)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
+            data = trymer(entry_fields[3].get())
+            obecnosc = trymer(entry_fields[4].get())
+            nowa_obecnosc = trymer(entry_fields[5].get())
             count = 0
             nowy_uczen = None
             for i in Uczeń.lista_uczniów:
@@ -488,12 +455,9 @@ class Obecność:
     @staticmethod
     def wyświetl_obecności_ucznia(entry_fields):
         try:
-            imie = entry_fields[0].get()
-            trymer(imie)
-            nazwisko = entry_fields[1].get()
-            trymer(nazwisko)
-            pesel = entry_fields[2].get()
-            trymer(pesel)
+            imie = trymer(entry_fields[0].get())
+            nazwisko = trymer(entry_fields[1].get())
+            pesel = trymer(entry_fields[2].get())
             count = 0
             lista_obecności_ucznia = []
             for i in Uczeń.lista_uczniów:
@@ -546,8 +510,7 @@ def wczytywanie_z_pliku(nazwa:str):
         print(f"Plik '{nazwa}' nie istnieje.")
 
 def trymer(zmienna):
-    zmienna.lstrip()
-    zmienna.rstrip()
+    return zmienna.strip()
 
 def wypisywanie_błędów(treść):
     if error_box:
@@ -807,7 +770,6 @@ def update_entries(selection):
 
             zmiana_opcji()
             return
-
         case "Wyświetl średnią ucznia":
             labels = ["Imię", "Nazwisko", "Pesel"]
             for i in range(len(labels)):
@@ -835,6 +797,31 @@ def update_entries(selection):
             entries_frame.grid_columnconfigure(1, weight=0)
             entries_frame.grid_columnconfigure(2, weight=0)
             entries_frame.grid_columnconfigure(3, weight=0)
+            return
+        case "Sprawdź status ucznia":
+            labels = ["Imię", "Nazwisko", "Pesel"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=0, padx=5, pady=5, sticky="e")
+                entry = tk.Entry(entries_frame, width=15)
+                entry.grid(row=2 + i, column=1, padx=7, pady=10)
+                entry_fields.append(entry)
+            def wyświetl_status_ucznia():
+                status=Uczeń.czy_zagrożony(entry_fields)
+                listbox.delete(0, tk.END)
+                if len(status)>0:
+                    for i in status:
+                        listbox.insert(tk.END, i)
+
+            label = tk.Label(entries_frame, text="Status ucznia")
+            label.grid(row=2, column=2, padx=5, pady=3, sticky="ew")
+            save_button = tk.Button(entries_frame, text="Wyświetl status ucznia", command=wyświetl_status_ucznia)
+            save_button.grid(row=2 + len(labels), column=1, pady=5)
+            listbox = tk.Listbox(entries_frame)
+            listbox.grid(row=3, column=2, rowspan=10, padx=5, pady=3, sticky="nsew")
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=1)
             return
         case "Wygeneruj raport z ocen i obecności uczniów":
             entry = tk.Entry(entries_frame, width=15)
@@ -867,6 +854,7 @@ options = ["Dodawanie ucznia",
            "Edycja oceny/obecności danego dnia",
            "Wyświetlenie oceny/obecności danego ucznia",
            "Wyświetl średnią ucznia",
+           "Sprawdź status ucznia",
            "Wygeneruj raport z ocen i obecności uczniów",
            "Generowanie statystyk"]
 dropdown = tk.OptionMenu(okno_aplikacji, selected_option, *options, command=update_entries)

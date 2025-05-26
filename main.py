@@ -167,7 +167,7 @@ class Uczeń:
         liczba_ocen=0
         for i in Ocena.lista_ocen:
             if i.uczeń.pesel == self._pesel:
-                średnia += i.wartość
+                średnia += float(i.wartość)
                 liczba_ocen += 1
         średnia = średnia/liczba_ocen
         if liczba_ocen == 0:
@@ -561,7 +561,8 @@ class Ocena:
         #wykres słupkowy ze srednimi ocenami uczniow
         uczen_srednia={}
         for i in Uczeń.lista_uczniów:
-            uczen_srednia[f"{i.imie} {i.nazwisko} {i.pesel}"]=i.oblicz_średnią()
+            uczen_srednia[i.imie+" "+i.nazwisko+" "+ i.pesel]=i.oblicz_średnią()
+            print(i.oblicz_średnią())
 
         uczniowie = list(uczen_srednia.keys())
         srednie_oceny = list(uczen_srednia.values())
@@ -742,7 +743,7 @@ def wczytywanie_z_pliku(nazwa:str):
                     pesel = dane[0]
                     for i in Uczeń.lista_uczniów:
                         if i.pesel == pesel:
-                            ocena = Ocena(uczeń=i, opis=dane[1], data=dane[2],wartość=3)
+                            ocena = Ocena(uczeń=i, opis=dane[1], data=dane[2],wartość=dane[3])
                             Ocena.lista_ocen.append(ocena)
                             break
                 elif nazwa == "Obecności.txt":

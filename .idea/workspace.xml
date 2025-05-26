@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="dodanie wyjątków">
-      <change beforePath="$PROJECT_DIR$/.idea/ProjektPPY.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ProjektPPY.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oceny.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Oceny.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Uczniowie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Uczniowie.txt" afterDir="false" />
+    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="edytowanie ucznia, raporty">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -109,7 +104,7 @@
       <workItem from="1748225006702" duration="9426000" />
       <workItem from="1748241078261" duration="4903000" />
       <workItem from="1748252591114" duration="25380000" />
-      <workItem from="1748278820390" duration="11253000" />
+      <workItem from="1748278820390" duration="11606000" />
     </task>
     <task id="LOCAL-00001" summary="Dodałem pliki z przykładowymi danymi i odczyt tych danych">
       <option name="closed" value="true" />
@@ -255,7 +250,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748274648132</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="edytowanie ucznia, raporty">
+      <option name="closed" value="true" />
+      <created>1748290951867</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1748290951867</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -291,9 +294,10 @@
     <MESSAGE value="wystaw zagrożenia" />
     <MESSAGE value="wystaw zagrożenia i poprawa zapisu do pliku" />
     <MESSAGE value="dodanie wyjątków" />
-    <option name="LAST_COMMIT_MESSAGE" value="dodanie wyjątków" />
+    <MESSAGE value="edytowanie ucznia, raporty" />
+    <option name="LAST_COMMIT_MESSAGE" value="edytowanie ucznia, raporty" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748290865407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748291222246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

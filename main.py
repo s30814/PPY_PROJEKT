@@ -60,6 +60,8 @@ class Uczeń:
                 średnia += i
                 liczba_ocen += 1
         średnia = średnia/len(self.lista_ocen)
+        if liczba_ocen == 0:
+            return ValueError("Uczeń nie posiada ocen")
         return średnia
 
     @staticmethod
@@ -125,24 +127,37 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
-    def czy_zagrożony(self):
+    def czy_zagrożony(entry_fields):
         liczba_lekcji=0
         liczba_nb=0
         liczba_sp=0
-        uczen=self
+        uczen=None
+        imie=entry_fields[0]
+        nazwisko=entry_fields[1]
+        pesel = entry_fields[2]
+        grupa = entry_fields[3]
+        count=0
         for i in Obecność.lista_obecności:
-            if i.uczeń.pesel == self._pesel:
+            if i.uczeń.pesel == pesel and i.uczeń.nazwa_grupy == grupa and i.uczeń.imie == imie and i.uczeń.nazwisko == nazwisko:
+                count+=1
+                uczen=i.uczeń
                 liczba_lekcji += 1
                 if i.status.lower()=="nieobecny":
                     liczba_nb+=1
                 elif i.status.lower() == "spóźniony":
                     liczba_sp+=1
-        if liczba_nb > 2:
-            raise ValueError("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności")
-        elif float(liczba_sp) >= float(liczba_sp)/2:
-            raise ValueError("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji")
-        elif self.oblicz_średnią()<3.0:
-            raise ValueError("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0")
+        try:
+            if count==0:
+                raise ValueError("Nieistnieje taka osoba")
+            elif liczba_nb > 2:
+                raise ValueError("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności")
+            elif float(liczba_sp) >= float(liczba_sp)/2:
+                raise ValueError("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji")
+            elif uczen.oblicz_średnią()<3.0:
+                raise ValueError("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
 
 class Grupa:
     lista_grup = []
@@ -615,10 +630,31 @@ def update_entries(selection):
         case "Wyświetlenie obecności danego ucznia":
             return
         case "Wyświetl średnią ucznia":
-            for i in range(2):
+            labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]
+            for i in range(len(labels)):
+                label = tk.Label(entries_frame, text=labels[i])
+                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
                 entry.grid(row=2+i, column=2, padx=7, pady=10)
                 entry_fields.append(entry)
+
+            save_button = tk.Button(entries_frame, text="Wyświetl średnią",
+                                    command=lambda: Uczeń.edytuj_ocene(entry_fields))
+            save_button.grid(row=2 + len(labels), column=3, pady=0)
+
+            entries_frame.grid_columnconfigure(0, weight=0)
+            entries_frame.grid_columnconfigure(1, weight=0)
+            entries_frame.grid_columnconfigure(2, weight=0)
+            entries_frame.grid_columnconfigure(3, weight=1)
+
+            listbox = tk.Listbox(entries_frame)
+            label = tk.Label(entries_frame, text="Lista ocen")
+            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
+            for i in Ocena.lista_ocen:
+                listbox.insert(tk.END,
+                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(
+                                   i.wartość))
+            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
         case "Wygeneruj raport z ocen i obecności uczniów":
             entry = tk.Entry(entries_frame, width=15)

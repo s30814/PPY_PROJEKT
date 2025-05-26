@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="poprawione uczen edycja w liscie">
+    <list default="true" id="2fb7f800-27b7-4136-876e-459406b8a024" name="Changes" comment="dodanie czy_zagrożony">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oceny.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Oceny.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +103,7 @@
       <workItem from="1748002347585" duration="2281000" />
       <workItem from="1748190589310" duration="956000" />
       <workItem from="1748225006702" duration="9426000" />
-      <workItem from="1748241078261" duration="4175000" />
+      <workItem from="1748241078261" duration="4903000" />
     </task>
     <task id="LOCAL-00001" summary="Dodałem pliki z przykładowymi danymi i odczyt tych danych">
       <option name="closed" value="true" />
@@ -170,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748243172641</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="dodanie czy_zagrożony">
+      <option name="closed" value="true" />
+      <created>1748245309428</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1748245309428</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,9 +203,10 @@
     <MESSAGE value="zmienione literówki" />
     <MESSAGE value="Edycja ucznia" />
     <MESSAGE value="poprawione uczen edycja w liscie" />
-    <option name="LAST_COMMIT_MESSAGE" value="poprawione uczen edycja w liscie" />
+    <MESSAGE value="dodanie czy_zagrożony" />
+    <option name="LAST_COMMIT_MESSAGE" value="dodanie czy_zagrożony" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748245275527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPY_PROJEKT$main.coverage" NAME="main Coverage Results" MODIFIED="1748246005486" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

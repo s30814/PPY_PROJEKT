@@ -40,3 +40,4 @@
 95062567890	Kartkowa	25.05.2025	5
 00000000001	Kartkówka z układu pokarmowego	23.05.2025	3
 00000000001	Kartkówka z układu pokarmowego	23.05.2025	5
+00000000001	Kartkówka	23.03.2024	4

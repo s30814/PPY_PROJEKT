@@ -67,9 +67,17 @@ class Uczeń:
         try:
             with (open("Uczniowie.txt", "a", encoding="utf-8") as plik):
                 imie = entry_fields[0].get()
+                imie.lstrip()
+                imie.rstrip()
                 nazwisko = entry_fields[1].get()
+                nazwisko.lstrip()
+                nazwisko.rstrip()
                 pesel = entry_fields[2].get()
+                pesel.lstrip()
+                pesel.rstrip()
                 grupa = entry_fields[3].get()
+                grupa.lstrip()
+                grupa.rstrip()
                 nowy_uczen = Uczeń(imie=imie, nazwisko=nazwisko, pesel=pesel, nazwa_grupy=grupa)
                 Uczeń.lista_uczniów.append(nowy_uczen)
                 print(f"Dodano ucznia: {imie} {nazwisko}, PESEL: {pesel}, Grupa: {grupa}")
@@ -86,9 +94,17 @@ class Uczeń:
         try:
             with (open("Uczniowie.txt", "w", encoding="utf-8") as plik):
                 imie = entry_fields[0].get()
+                imie.lstrip()
+                imie.rstrip()
                 nazwisko = entry_fields[1].get()
+                nazwisko.lstrip()
+                nazwisko.rstrip()
                 pesel = entry_fields[2].get()
+                pesel.lstrip()
+                pesel.rstrip()
                 grupa = entry_fields[3].get()
+                grupa.lstrip()
+                grupa.rstrip()
                 count=0
                 for i in Uczeń.lista_uczniów:
                     if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel and i.nazwa_grupy == grupa:
@@ -109,8 +125,24 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
-    #def czy_zagrożony(self):
-
+    def czy_zagrożony(self):
+        liczba_lekcji=0
+        liczba_nb=0
+        liczba_sp=0
+        uczen=self
+        for i in Obecność.lista_obecności:
+            if i.uczeń.pesel == self._pesel:
+                liczba_lekcji += 1
+                if i.status.lower()=="nieobecny":
+                    liczba_nb+=1
+                elif i.status.lower() == "spóźniony":
+                    liczba_sp+=1
+        if liczba_nb > 2:
+            raise ValueError("Uczeń jest zagrożony, ponieważ ma więcej niż 2 nieobecności")
+        elif float(liczba_sp) >= float(liczba_sp)/2:
+            raise ValueError("Uczeń jest zagrożony, ponieważ ma spóźnienia na conajmniej połowie lekcji")
+        elif self.oblicz_średnią()<3.0:
+            raise ValueError("Uczeń jest zagrożony, ponieważ ma średnią poniżej 3.0")
 
 class Grupa:
     lista_grup = []

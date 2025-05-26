@@ -572,6 +572,7 @@ class Ocena:
         plt.ylim(0,6)
         plt.xticks(rotation=90, ha="center")
         plt.tight_layout()
+        plt.savefig("wykres1.png", format="png", dpi=300, bbox_inches="tight")
         plt.show()
         #wykres kolowy statusu obecnosci wskazanego ucznia
         pesel=trymer(entry_fields[0].get())
@@ -590,6 +591,7 @@ class Ocena:
         plt.pie(ilosc, labels=statusy2, autopct='%1.1f%%')
         plt.title("Statusy obecnosci podanego ucznia")
         plt.axis('equal')
+        plt.savefig("wykres2.png", format="png", dpi=300, bbox_inches="tight")
         plt.show()
         #wykres ocen wskazanej klasy
 

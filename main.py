@@ -112,6 +112,7 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    @staticmethod
     def czy_zagrożony(entry_fields):
         liczba_lekcji=0
         liczba_nb=0
@@ -233,6 +234,7 @@ class Ocena:
         except:
             raise ValueError("Nie poprawna data, data przykładowa: 23.05.2024")
 
+    @staticmethod
     def dodaj_ocene(entry_fields):
         try:
             imie = entry_fields[0].get()
@@ -268,6 +270,7 @@ class Ocena:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    @staticmethod
     def edytuj_ocene(entry_fields):
         try:
             imie = entry_fields[0].get()
@@ -313,6 +316,33 @@ class Ocena:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    @staticmethod
+    def wyświetl_oceny_ucznia(entry_fields):
+        try:
+            imie = entry_fields[0].get()
+            trymer(imie)
+            nazwisko = entry_fields[1].get()
+            trymer(nazwisko)
+            pesel = entry_fields[2].get()
+            trymer(pesel)
+            count = 0
+            lista_ocen_ucznia=[]
+            for i in Uczeń.lista_uczniów:
+                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel:
+                    count += 1
+                    break
+            if count == 0:
+                raise ValueError("Nie istnieje taka osoba")
+            for i in Ocena.lista_ocen:
+                if i.uczeń.imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel:
+                    lista_ocen_ucznia.append(i.opis+"   "+i.data+"   "+str(i.wartość))
+            if len(lista_ocen_ucznia) == 0:
+                raise ValueError("Ten uczeń jeszcze nie ma dodanych ocen")
+            return lista_ocen_ucznia
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+            return []
 class Obecność:
     lista_obecności = []
     def __init__(self, uczeń:Uczeń, data:str, status:str):
@@ -358,6 +388,7 @@ class Obecność:
         else:
             self._status = nowy_status
 
+    @staticmethod
     def sprawdzanie_obecnosci(entry_fields):
         try:
             grupa = entry_fields[0].get()
@@ -394,6 +425,7 @@ class Obecność:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    @staticmethod
     def edytuj_obecnosc(entry_fields):
         try:
             imie = entry_fields[0].get()
@@ -436,6 +468,33 @@ class Obecność:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    @staticmethod
+    def wyświetl_obecności_ucznia(entry_fields):
+        try:
+            imie = entry_fields[0].get()
+            trymer(imie)
+            nazwisko = entry_fields[1].get()
+            trymer(nazwisko)
+            pesel = entry_fields[2].get()
+            trymer(pesel)
+            count = 0
+            lista_obecności_ucznia = []
+            for i in Uczeń.lista_uczniów:
+                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel:
+                    count += 1
+                    break
+            if count == 0:
+                raise ValueError("Nie istnieje taka osoba")
+            for i in Obecność.lista_obecności:
+                if i.uczeń.imie and i.uczeń.nazwisko == nazwisko and i.uczeń.pesel == pesel:
+                    lista_obecności_ucznia.append(i.data + "   " + i.status)
+            if len(lista_obecności_ucznia) == 0:
+                raise ValueError("Ten uczeń jeszcze nie ma wpisanych obecności")
+            return lista_obecności_ucznia
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+            return []
 
 def wczytywanie_z_pliku(nazwa:str):
     try:
@@ -624,7 +683,7 @@ def update_entries(selection):
                 #Dodaje RadioButtony
                 tk.Label(entries_frame, text="Wybierz tryb edycji:").grid(row=0, column=0, pady=3, sticky="w")
                 tk.Radiobutton(entries_frame, text="Edycja oceny", variable=option_var, value="ocena", command=zmiana_opcji).grid(row=0, column=1, sticky="w")
-                tk.Radiobutton(entries_frame, text="Edycja obecności", variable=option_var, value="obecnosc", command=zmiana_opcji).grid(row=0, column=2, sticky="w")
+                tk.Radiobutton(entries_frame, text="Edycja obecności", variable=option_var, value="obecność", command=zmiana_opcji).grid(row=0, column=2, sticky="w")
 
                 #Pola formularza + przycisk zapisu w zależności od wybranej opcji
                 if option_var.get() == "ocena":
@@ -674,14 +733,60 @@ def update_entries(selection):
                 entries_frame.grid_columnconfigure(3, weight=1)
             zmiana_opcji()
             return
-        case "Wyświetlenie oceny danego ucznia":
-            for i in range(3):
-                entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
-                entry_fields.append(entry)
+        case "Wyświetlenie oceny/obecności danego ucznia":
+            option_var = tk.StringVar(value="ocena")
+
+            def zmiana_opcji():
+                # Czyszcze stare pola i widgety
+                for widget in entries_frame.winfo_children():
+                    widget.destroy()
+                entry_fields.clear()
+
+                # Dodaje RadioButtony
+                tk.Label(entries_frame, text="Wybierz opcję wyświetlania:").grid(row=0, column=0, pady=3, sticky="w")
+                tk.Radiobutton(entries_frame, text="Wyświetlanie ocen", variable=option_var, value="ocena",
+                               command=zmiana_opcji).grid(row=0, column=1, sticky="w")
+                tk.Radiobutton(entries_frame, text="Wyświetlanie obecności", variable=option_var, value="obecność",
+                               command=zmiana_opcji).grid(row=0, column=2, sticky="we")
+
+                # Pola formularza + przycisk zapisu w zależności od wybranej opcji
+                labels = ["Imię", "Nazwisko", "Pesel"]
+                for i in range(len(labels)):
+                    label = tk.Label(entries_frame, text=labels[i])
+                    label.grid(row=2 + i, column=0, padx=5, pady=3, sticky="e")
+                    entry = tk.Entry(entries_frame, width=15)
+                    entry.grid(row=2 + i, column=1, padx=5, pady=3)
+                    entry_fields.append(entry)
+
+                def wyswietl_oceny():
+                    lista_ucznia = Ocena.wyświetl_oceny_ucznia(entry_fields)
+                    listbox.delete(0, tk.END)
+                    if len(lista_ucznia)>0:
+                        for i in lista_ucznia:
+                            listbox.insert(tk.END, f"{i}")
+
+                def wyswietl_obecności():
+                    lista_ucznia = Obecność.wyświetl_obecności_ucznia(entry_fields)
+                    listbox.delete(0, tk.END)
+                    if len(lista_ucznia) > 0:
+                        for i in lista_ucznia:
+                            listbox.insert(tk.END, f"{i}")
+
+                if option_var.get() == "ocena":
+                    save_button = tk.Button(entries_frame, text="Wyświetl oceny", command=wyswietl_oceny)
+                    save_button.grid(row=2 + len(labels), column=1, pady=5)
+                else:
+                    save_button = tk.Button(entries_frame, text="Wyświetl obecności", command=wyswietl_obecności)
+                    save_button.grid(row=2 + len(labels), column=1, pady=5)
+                listbox = tk.Listbox(entries_frame)
+                listbox.grid(row=3, column=2, rowspan=10, padx=5, pady=3, sticky="nsew")
+                entries_frame.grid_columnconfigure(0, weight=0)
+                entries_frame.grid_columnconfigure(1, weight=0)
+                entries_frame.grid_columnconfigure(2, weight=1)
+
+            zmiana_opcji()
             return
-        case "Wyświetlenie obecności danego ucznia":
-            return
+
         case "Wyświetl średnią ucznia":
             labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]
             for i in range(len(labels)):
@@ -738,8 +843,7 @@ options = ["Dodawanie ucznia",
            "Sprawdzanie obecności",
            "Wystawianie oceny",
            "Edycja oceny/obecności danego dnia",
-           "Wyświetlenie oceny danego ucznia",
-           "Wyświetlenie obecności danego ucznia",
+           "Wyświetlenie oceny/obecności danego ucznia",
            "Wyświetl średnią ucznia",
            "Wygeneruj raport z ocen i obecności uczniów",
            "Generowanie statystyk"]

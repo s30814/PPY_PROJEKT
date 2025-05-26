@@ -143,16 +143,6 @@ class Grupa:
             if len(i.uczniowie) == 0:
                 Grupa.lista_grup.remove(i)
 
-    # def dodaj_ucznia(self, uczeń_imie:str,uczeń_nazwisko:str,uczeń_pesel:str):
-    #     uczeń=Uczeń(imie=uczeń_imie, nazwisko=uczeń_nazwisko, pesel=uczeń_pesel, nazwa_grupy=self.nazwa)
-    #     #w tym przypadku naleźy dodać takiego ucznia do istniejących uczniów w klasie uczeń lub dopisać do pliku txt
-    #     self.uczniowie.append(uczeń)
-    # def usun_ucznia(self, uczeń):
-    #     if uczeń in self.uczniowie:
-    #         self.uczniowie.remove(uczeń)
-    #     else:
-    #         raise ValueError("Taki uczeń nie istnieje w tej grupie")
-
 class Ocena:
     lista_ocen = []
     def __init__(self, uczeń:Uczeń, opis:str, data:str, wartość:str):
@@ -403,7 +393,7 @@ wczytywanie_z_pliku("Oceny.txt")
 wczytywanie_z_pliku("Obecności.txt")
 
 okno_aplikacji = tk.Tk()
-okno_aplikacji.geometry("600x420")
+okno_aplikacji.geometry("720x430")
 okno_aplikacji.title("Dziennik nauczyciela")
 
 entries_frame = tk.Frame(okno_aplikacji)
@@ -414,7 +404,7 @@ okno_aplikacji.grid_rowconfigure(1, weight=1)
 
 global error_box
 error_box = tk.Text(okno_aplikacji, height=5, fg="red", wrap="word")
-error_box.grid(row=2, column=0, columnspan=5, sticky="we", padx=10, pady=10)
+error_box.grid(row=2, column=0, columnspan=5, sticky="we", padx=10, pady=5)
 
 
 ocenaLubObecnosc=[]
@@ -487,9 +477,9 @@ def update_entries(selection):
             labels = ["Grupa", "Imie", "Nazwisko", "Pesel", "Data", "Stan obecności"]
             for i in range(len(labels)):
                 label = tk.Label(entries_frame, text=labels[i])
-                label.grid(row=2 + i, column=1, padx=7, pady=10, sticky="e")
+                label.grid(row=2 + i, column=1, padx=7, pady=7, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
+                entry.grid(row=2+i, column=2, padx=7, pady=7)
                 entry_fields.append(entry)
 
             save_button = tk.Button(entries_frame, text="Dodaj obecnosc", command=lambda: Obecność.sprawdzanie_obecnosci(entry_fields))
@@ -532,15 +522,15 @@ def update_entries(selection):
             listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
             return
         case "Edycja oceny danego dnia":
-            labels=["imie", "nazwisko", "pesel", "data", "Wartosc oceny", "Opis oceny", "Nowa wartość", "Nowy opis"]
+            labels=["Imię", "Nazwisko", "Pesel", "Data", "Wartość oceny", "Opis oceny", "Nowa wartość", "Nowy opis"]
             for i in range(len(labels)):
                 label = tk.Label(entries_frame, text=labels[i])
-                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
+                label.grid(row=2 + i, column=1, padx=5, pady=3, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2 + i, column=2, padx=5, pady=5)
+                entry.grid(row=2 + i, column=2, padx=5, pady=3)
                 entry_fields.append(entry)
 
-            save_button = tk.Button(entries_frame, text="Edytuj ocene", command=lambda: Ocena.edytuj_ocene(entry_fields))
+            save_button = tk.Button(entries_frame, text="Edytuj ocenę", command=lambda: Ocena.edytuj_ocene(entry_fields))
             save_button.grid(row=2 + len(labels), column=3, pady=0)
 
             entries_frame.grid_columnconfigure(0, weight=0)
@@ -566,7 +556,7 @@ def update_entries(selection):
                 entry.grid(row=2 + i, column=2, padx=5, pady=5)
                 entry_fields.append(entry)
 
-            save_button = tk.Button(entries_frame, text="Edytuj ocene",
+            save_button = tk.Button(entries_frame, text="Edytuj obecność",
                                     command=lambda: Ocena.edytuj_ocene(entry_fields))
             save_button.grid(row=2 + len(labels), column=3, pady=0)
 

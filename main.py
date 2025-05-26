@@ -14,6 +14,7 @@ class Uczeń:
         else:
             raise ValueError("Nie poprawny pesel")
         self.nazwa_grupy = nazwa_grupy
+        self.zagrożenie = False
 
     @property
     def imie(self):
@@ -49,6 +50,14 @@ class Uczeń:
     @nazwa_grupy.setter
     def nazwa_grupy(self, nowa_nazwa_grupy):
         self._nazwa_grupy = nowa_nazwa_grupy
+
+    @property
+    def zagrożenie(self):
+        return self._zagrożenie
+
+    @zagrożenie.setter
+    def zagrożenie(self,nowa_wartosc):
+        self._zagrożenie = nowa_wartosc
 
     def oblicz_średnią(self):
         średnia=0.0
@@ -128,6 +137,27 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
             return 0.0
+
+    @staticmethod
+    def wystaw_zagrożenia():
+        for j in Uczeń.lista_uczniów:
+            liczba_lekcji=0
+            liczba_nb=0
+            liczba_sp=0
+            for i in Obecność.lista_obecności:
+                if j.pesel == i.uczeń.pesel:
+                    liczba_lekcji += 1
+                    if i.status.lower() == "nieobecny":
+                        liczba_nb += 1
+                    elif i.status.lower() == "spóźniony":
+                        liczba_sp += 1
+            if liczba_nb > 2:
+                j.zagrożenie=True
+            elif float(liczba_sp) >= float(liczba_lekcji)/2:
+                j.zagrożenie=True
+            elif j.oblicz_średnią()<3.0:
+                j.zagrożenie=True
+
     @staticmethod
     def czy_zagrożony(entry_fields):
         liczba_lekcji=0
@@ -779,6 +809,9 @@ def update_entries(selection):
 
             zmiana_opcji()
             return
+        case "Wystaw zagrożenia":
+            save_button = tk.Button(entries_frame, text="Wystaw zagrożenia",command=lambda: Uczeń.wystaw_zagrożenia())
+            save_button.grid(row=2, column=1, pady=0)
         case "Wyświetl średnią ucznia":
             labels = ["Imię", "Nazwisko", "Pesel"]
             for i in range(len(labels)):
@@ -864,6 +897,7 @@ options = ["Dodawanie ucznia",
            "Wyświetlenie oceny/obecności danego ucznia",
            "Wyświetl średnią ucznia",
            "Sprawdź status ucznia",
+           "Wystaw zagrożenia",
            "Wygeneruj raport z ocen i obecności uczniów",
            "Generowanie statystyk"]
 dropdown = tk.OptionMenu(okno_aplikacji, selected_option, *options, command=update_entries)

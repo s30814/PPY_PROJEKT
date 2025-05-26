@@ -56,7 +56,7 @@ class Uczeń:
         liczba_ocen=0
         for i in Ocena.lista_ocen:
             if i.uczeń.pesel == self._pesel:
-                średnia += i
+                średnia += i.wartość
                 liczba_ocen += 1
         średnia = średnia/liczba_ocen
         if liczba_ocen == 0:
@@ -112,6 +112,23 @@ class Uczeń:
             wypisywanie_błędów(e)
             print(f"Błąd: {e}")
 
+    @staticmethod
+    def wyświetl_średnią_ucznia(entry_fields):
+        try:
+            imie = entry_fields[0].get()
+            trymer(imie)
+            nazwisko = entry_fields[1].get()
+            trymer(nazwisko)
+            pesel = entry_fields[2].get()
+            trymer(pesel)
+            for i in Uczeń.lista_uczniów:
+                if i.imie == imie and i.nazwisko == nazwisko and i.pesel == pesel:
+                    return i.oblicz_średnią()
+            raise ValueError("Nie istnieje taka osoba")
+        except ValueError as e:
+            wypisywanie_błędów(e)
+            print(f"Błąd: {e}")
+            return 0.0
     @staticmethod
     def czy_zagrożony(entry_fields):
         liczba_lekcji=0
@@ -773,9 +790,13 @@ def update_entries(selection):
                             listbox.insert(tk.END, f"{i}")
 
                 if option_var.get() == "ocena":
+                    label = tk.Label(entries_frame, text="Lista ocen")
+                    label.grid(row=2, column=2, padx=5, pady=3, sticky="ew")
                     save_button = tk.Button(entries_frame, text="Wyświetl oceny", command=wyswietl_oceny)
                     save_button.grid(row=2 + len(labels), column=1, pady=5)
                 else:
+                    label = tk.Label(entries_frame, text="Lista obecności")
+                    label.grid(row=2, column=2, padx=5, pady=3, sticky="ew")
                     save_button = tk.Button(entries_frame, text="Wyświetl obecności", command=wyswietl_obecności)
                     save_button.grid(row=2 + len(labels), column=1, pady=5)
                 listbox = tk.Listbox(entries_frame)
@@ -788,31 +809,32 @@ def update_entries(selection):
             return
 
         case "Wyświetl średnią ucznia":
-            labels = ["Imię", "Nazwisko", "Pesel", "Nazwa grupy"]
+            labels = ["Imię", "Nazwisko", "Pesel"]
             for i in range(len(labels)):
                 label = tk.Label(entries_frame, text=labels[i])
-                label.grid(row=2 + i, column=1, padx=5, pady=5, sticky="e")
+                label.grid(row=2 + i, column=0, padx=5, pady=5, sticky="e")
                 entry = tk.Entry(entries_frame, width=15)
-                entry.grid(row=2+i, column=2, padx=7, pady=10)
+                entry.grid(row=2+i, column=1, padx=7, pady=10)
                 entry_fields.append(entry)
 
+            def wyświetl_średnią():
+                srednia = Uczeń.wyświetl_średnią_ucznia(entry_fields)
+                srednia_label.config(text=f"{srednia}")
+
             save_button = tk.Button(entries_frame, text="Wyświetl średnią",
-                                    command=lambda: Uczeń.edytuj_ocene(entry_fields))
-            save_button.grid(row=2 + len(labels), column=3, pady=0)
+                                    command=lambda: wyświetl_średnią())
+            save_button.grid(row=2 + len(labels), column=1, pady=0)
+
+            label = tk.Label(entries_frame, text="Średnia:")
+            label.grid(row=3, column=2, padx=5, pady=3, sticky="e")
+
+            srednia_label = tk.Label(entries_frame, text="", relief="sunken", width=10, anchor="e")
+            srednia_label.grid(row=3, column=3, padx=5, pady=3, sticky="w")
 
             entries_frame.grid_columnconfigure(0, weight=0)
             entries_frame.grid_columnconfigure(1, weight=0)
             entries_frame.grid_columnconfigure(2, weight=0)
-            entries_frame.grid_columnconfigure(3, weight=1)
-
-            listbox = tk.Listbox(entries_frame)
-            label = tk.Label(entries_frame, text="Lista ocen")
-            label.grid(row=2, column=3, padx=5, pady=3, sticky="ew")
-            for i in Ocena.lista_ocen:
-                listbox.insert(tk.END,
-                               i.uczeń.imie + '   ' + i.uczeń.nazwisko + "   " + i.uczeń.pesel + "   " + i.uczeń.nazwa_grupy + "   " + i.opis + "   " + i.data + "   " + str(
-                                   i.wartość))
-            listbox.grid(row=3, column=3, rowspan=5, padx=5, pady=3, sticky="nsew")
+            entries_frame.grid_columnconfigure(3, weight=0)
             return
         case "Wygeneruj raport z ocen i obecności uczniów":
             entry = tk.Entry(entries_frame, width=15)
